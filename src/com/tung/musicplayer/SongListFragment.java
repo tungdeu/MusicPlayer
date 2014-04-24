@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import CustomAdapter.CustomAnimationListAdapter;
 import CustomAdapter.CustomSongListAdapter;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.tung.Entities.OfflineSong;
@@ -27,6 +29,7 @@ public class SongListFragment extends Fragment {
 
 	List<OfflineSong> Songs;
 	Intent intentPlay;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -69,33 +72,19 @@ public class SongListFragment extends Fragment {
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 				song.setTitle(tmp);
 
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.Audio.Media.ARTIST));
-				// if (tmp.isEmpty())T
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_ARTIST));
-				// song.setArtist(tmp);
-				//
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.Audio.Media.ALBUM));
-				// if (tmp.isEmpty())
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_ALBUM));
-				// song.setAlbum(tmp);
-
 				Songs.add(song);
-				// count++;
+
 			}
 
 		} while (cursor.moveToNext());
 		Collections.sort(Songs, new TitleComparator());
 		ListView lst = (ListView) view.findViewById(R.id.listView1);
-		CustomSongListAdapter adapter = new CustomSongListAdapter(getActivity(), Songs);
+		CustomSongListAdapter adapter = new CustomSongListAdapter(
+				getActivity(), Songs);
 		lst.setAdapter(adapter);
 
-		
-		intentPlay = new Intent(getActivity(),PlaySong.class);
-		
+		intentPlay = new Intent(getActivity(), PlaySong.class);
+
 		lst.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -104,24 +93,27 @@ public class SongListFragment extends Fragment {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				intentPlay.putExtra("path", path);
+
 				
 				startActivity(intentPlay);
-				
+
 			}
-			
+
 		});
+		
+		//ListView list = (ListView)view.findViewById(R.id.listView1);
+        
 		return view;
 
 	}
 
-	
 	public class TitleComparator implements Comparator<OfflineSong> {
-	    @Override
-	    public int compare(OfflineSong o1, OfflineSong o2) {
-	    	Locale vietnam = new Locale("vi_VN");
+		@Override
+		public int compare(OfflineSong o1, OfflineSong o2) {
+			Locale vietnam = new Locale("vi_VN");
 			Collator vietnamCollator = Collator.getInstance(vietnam);
-	        return vietnamCollator.compare(o1.getTitle(),o2.getTitle());
-	    }
+			return vietnamCollator.compare(o1.getTitle(), o2.getTitle());
+		}
 	}
 
 }

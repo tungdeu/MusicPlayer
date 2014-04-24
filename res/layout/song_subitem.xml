@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="fill_parent"
+    android:layout_height="50dip"
+    android:layout_marginBottom="-50dip"
+    android:visibility="gone" >
+
+    <ImageView
+        android:id="@+id/song_subitem_imgView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
+    <ImageView
+        android:id="@+id/song_subitem_imgView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
+    <ImageView
+        android:id="@+id/song_subitem_imgView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@android:drawable/ic_menu_slideshow" />
+
+</RelativeLayout>

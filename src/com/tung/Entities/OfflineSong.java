@@ -3,6 +3,7 @@ package com.tung.Entities;
 import android.graphics.Bitmap;
 
 public class OfflineSong {
+	private long audioId;
 	private String path;
 	private String title;
 	private String artist;
@@ -10,6 +11,23 @@ public class OfflineSong {
 	private String lyric;
 	private Bitmap artwork;
 	
+	
+	public long getAudioId() {
+		return audioId;
+	}
+
+	public void setAudioId(long audioId) {
+		this.audioId = audioId;
+	}
+
+	public Bitmap getArtwork() {
+		return artwork;
+	}
+
+	public void setArtwork(Bitmap artwork) {
+		this.artwork = artwork;
+	}
+
 	public Bitmap getAlbumArt() {
 		return artwork;
 	}

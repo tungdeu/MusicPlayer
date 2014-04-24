@@ -19,12 +19,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 			return new ArtistListFragment();
 		case 2:
 			return new AlbumList();
+		case 3:
+			return new PlayListFragment();
 		}
 		return null;
 	}
 
 	@Override
 	public int getCount() {
-		return 3;
+		return 4;
 	}
 }
