@@ -1032,7 +1032,6 @@ containing a value of this type.
         public static final int shadow=0x7f020073;
     }
     public static final class id {
-        public static final int RelativeLayout1=0x7f04004e;
         public static final int ScrollView1=0x7f040038;
         public static final int abs__action_bar=0x7f040026;
         public static final int abs__action_bar_container=0x7f040025;
@@ -1073,7 +1072,7 @@ containing a value of this type.
         public static final int abs__textButton=0x7f040019;
         public static final int abs__title=0x7f040021;
         public static final int abs__up=0x7f040011;
-        public static final int action_settings=0x7f040056;
+        public static final int action_settings=0x7f040062;
         public static final int album_detail_imgView=0x7f040043;
         public static final int album_detail_lstView=0x7f040046;
         public static final int album_detail_txtViewAlbum=0x7f040044;
@@ -1084,7 +1083,13 @@ containing a value of this type.
         public static final int artist_detail_txtViewArtist=0x7f040049;
         public static final int artist_item_imgView=0x7f04004b;
         public static final int artist_item_txtView=0x7f04004c;
+        public static final int btn_spinner=0x7f040059;
+        public static final int button3=0x7f04004f;
         public static final int disableHome=0x7f04000f;
+        public static final int doSomething1=0x7f04005b;
+        public static final int doSomething2=0x7f04005c;
+        public static final int doSomething3=0x7f04005d;
+        public static final int doSomething4=0x7f04005e;
         public static final int edit_query=0x7f04002c;
         public static final int fullscreen=0x7f040003;
         public static final int gridView1=0x7f04004d;
@@ -1100,23 +1105,30 @@ containing a value of this type.
         public static final int none=0x7f040004;
         public static final int normal=0x7f040007;
         public static final int pager=0x7f040041;
-        public static final int playlist_layout_imgView=0x7f04004f;
-        public static final int playlist_layout_txtView=0x7f040050;
+        public static final int playlist_detail_btnClear=0x7f04004e;
+        public static final int playlist_detail_btnEdit=0x7f040050;
+        public static final int playlist_layout_imgView=0x7f040053;
+        public static final int playlist_layout_lstView=0x7f040055;
+        public static final int playlist_layout_txtView=0x7f040054;
         public static final int relativeLayout1=0x7f040039;
         public static final int relativeLayout2=0x7f04003c;
         public static final int right=0x7f040001;
-        public static final int search_item=0x7f040057;
+        public static final int search_item=0x7f040063;
         public static final int selected_view=0x7f040005;
         public static final int showCustom=0x7f04000e;
         public static final int showHome=0x7f04000b;
         public static final int showTitle=0x7f04000d;
-        public static final int slidingmenumain=0x7f040054;
-        public static final int song_item_textViewSong=0x7f040055;
+        public static final int slidingmenumain=0x7f040058;
+        public static final int song_item_textViewSong=0x7f040052;
+        public static final int song_subitem_imgView1=0x7f04005f;
+        public static final int song_subitem_imgView2=0x7f040060;
+        public static final int song_subitem_imgView3=0x7f040061;
         public static final int tabMode=0x7f040009;
         public static final int textView1=0x7f04003b;
         public static final int textView2=0x7f04003e;
-        public static final int textView3=0x7f040052;
-        public static final int textView4=0x7f040053;
+        public static final int textView3=0x7f040056;
+        public static final int textView4=0x7f040057;
+        public static final int toolbar=0x7f04005a;
         public static final int useLogo=0x7f04000a;
         public static final int welcomeTxt=0x7f040042;
         public static final int wrap_content=0x7f040006;
@@ -1158,13 +1170,16 @@ containing a value of this type.
         public static final int artist_detail=0x7f03001e;
         public static final int artist_item=0x7f03001f;
         public static final int listalbum_layout=0x7f030020;
-        public static final int playlist_layout=0x7f030021;
-        public static final int sherlock_spinner_dropdown_item=0x7f030022;
-        public static final int sherlock_spinner_item=0x7f030023;
-        public static final int simple_list=0x7f030024;
-        public static final int sliding_menu=0x7f030025;
-        public static final int slidingmenumain=0x7f030026;
-        public static final int song_item=0x7f030027;
+        public static final int playlist_detail=0x7f030021;
+        public static final int playlist_item=0x7f030022;
+        public static final int playlist_layout=0x7f030023;
+        public static final int sherlock_spinner_dropdown_item=0x7f030024;
+        public static final int sherlock_spinner_item=0x7f030025;
+        public static final int simple_list=0x7f030026;
+        public static final int sliding_menu=0x7f030027;
+        public static final int slidingmenumain=0x7f030028;
+        public static final int song_item=0x7f030029;
+        public static final int song_subitem=0x7f03002a;
     }
     public static final class menu {
         public static final int album_detail=0x7f0b0000;
