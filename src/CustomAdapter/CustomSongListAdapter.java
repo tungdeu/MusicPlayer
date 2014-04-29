@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
-import com.tung.object.CustomAnimation;
 
 public class CustomSongListAdapter extends BaseAdapter {
 	List<OfflineSong> Song;

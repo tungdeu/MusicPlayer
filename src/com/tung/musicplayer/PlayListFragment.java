@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import CustomAdapter.CustomPlayListAdapter;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,10 +17,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.tung.Entities.PlayListE;
+import com.tung.screen.PlayListDetail;
 
 public class PlayListFragment extends Fragment {
 	List<PlayListE> Playlist;
-
+	Intent intent;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater
@@ -47,7 +49,7 @@ public class PlayListFragment extends Fragment {
 				
 			}while (cursor.moveToNext());
 		}
-		
+		intent = new Intent(getActivity(),PlayListDetail.class);
 		ListView lst = (ListView)view.findViewById(R.id.playlist_layout_lstView);
 		CustomPlayListAdapter adapter = new CustomPlayListAdapter(getActivity(), Playlist);
 		lst.setAdapter(adapter);
@@ -58,6 +60,9 @@ public class PlayListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
+				String playListName = Playlist.get(arg2).getPlayListName();
+				intent.putExtra("name", playListName);
+				startActivity(intent);
 				
 			}
 		});

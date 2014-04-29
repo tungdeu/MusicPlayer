@@ -8,13 +8,7 @@ import java.util.Locale;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
-import com.tung.musicplayer.R.drawable;
-import com.tung.musicplayer.R.id;
-import com.tung.musicplayer.R.layout;
-import com.tung.musicplayer.R.menu;
 import com.tung.object.BitmapProcess;
-import com.tung.screen.ArtistDetail.TitleComparator;
-
 import CustomAdapter.CustomSongListAdapter;
 import android.app.Activity;
 import android.content.Intent;
