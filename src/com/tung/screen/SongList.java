@@ -1,17 +1,10 @@
 package com.tung.screen;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
@@ -19,13 +12,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
 import com.tung.musicplayer.TabsPagerAdapter;
-import com.tung.musicplayer.R.dimen;
-import com.tung.musicplayer.R.drawable;
-import com.tung.musicplayer.R.id;
-import com.tung.musicplayer.R.layout;
-import com.tung.musicplayer.R.menu;
 
 public class SongList extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
@@ -33,8 +22,8 @@ public class SongList extends SherlockFragmentActivity implements
 	private ViewPager mViewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
-	List<String> Songs;
 	SlidingMenu sMenu;
+	List<OfflineSong> Songs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

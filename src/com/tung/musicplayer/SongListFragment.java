@@ -13,21 +13,30 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.actionbarsherlock.widget.SearchView;
 import com.tung.Entities.OfflineSong;
+import com.tung.object.LoadImage;
 import com.tung.screen.PlaySong;
 
 public class SongListFragment extends Fragment {
 
 	List<OfflineSong> Songs;
 	Intent intentPlay;
-
+	CustomSongListAdapter adapter;
+	ListView lst;
+	EditText txtSearch;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -76,9 +85,8 @@ public class SongListFragment extends Fragment {
 
 		} while (cursor.moveToNext());
 		Collections.sort(Songs, new TitleComparator());
-		ListView lst = (ListView) view.findViewById(R.id.listView1);
-		CustomSongListAdapter adapter = new CustomSongListAdapter(
-				getActivity(), Songs);
+		lst = (ListView) view.findViewById(R.id.listView1);
+		adapter = new CustomSongListAdapter(getActivity(), Songs);
 		lst.setAdapter(adapter);
 
 		intentPlay = new Intent(getActivity(), PlaySong.class);
@@ -92,15 +100,50 @@ public class SongListFragment extends Fragment {
 				String path = Songs.get(arg2).getPath();
 				intentPlay.putExtra("path", path);
 
-				
 				startActivity(intentPlay);
 
 			}
 
 		});
-		
-		//ListView list = (ListView)view.findViewById(R.id.listView1);
-        
+
+		txtSearch = (EditText) view.findViewById(R.id.simple_list_searchBox);
+		txtSearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				adapter.setSource(Songs);
+				adapter.getFilter().filter(s);
+				LoadImage loadImage = new LoadImage(adapter);
+				loadImage.execute(lst.getFirstVisiblePosition());
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		}) ;
+			
+		ImageButton btnClear = (ImageButton) view.findViewById(R.id.imageButton1);
+		btnClear.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				txtSearch.setText("");
+				adapter.setSource(Songs);
+				adapter.notifyDataSetChanged();
+				
+			}
+		});
 		return view;
 
 	}

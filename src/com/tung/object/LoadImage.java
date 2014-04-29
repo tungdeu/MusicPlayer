@@ -3,17 +3,20 @@ package com.tung.object;
 import java.util.List;
 
 import CustomAdapter.CustomAlbumAdapter;
+import CustomAdapter.CustomArtistListAdapter;
+import CustomAdapter.CustomSongListAdapter;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
-import CustomAdapter.CustomArtistListAdapter;
+
 import com.tung.Entities.OfflineSong;
 
 
 public class LoadImage extends AsyncTask<Integer, Void, Void> {
 
 	int typeAdapter;
-	CustomAlbumAdapter songAdapter;
+	CustomSongListAdapter songAdapter;
+	CustomAlbumAdapter albumAdapter;
 	CustomArtistListAdapter artistAdapter;
 	int firstVisiblePosition, lastVisiblePosition;
 	String path;
@@ -23,9 +26,17 @@ public class LoadImage extends AsyncTask<Integer, Void, Void> {
 	MemoryLruCache memoryLruCache;
 	byte[] imageData;
 
-	public LoadImage(CustomAlbumAdapter songAdapter, List<OfflineSong> songs) {
+	public LoadImage(CustomSongListAdapter songAdapter) {
 		super();
 		this.songAdapter = songAdapter;
+		this.Songs = songAdapter.getSource();
+		memoryLruCache = new MemoryLruCache();
+		typeAdapter = 3;
+	}
+	
+	public LoadImage(CustomAlbumAdapter albumAdapter, List<OfflineSong> songs) {
+		super();
+		this.albumAdapter = albumAdapter;
 		this.Songs = songs;
 		memoryLruCache = new MemoryLruCache();
 		typeAdapter = 1;
@@ -42,13 +53,16 @@ public class LoadImage extends AsyncTask<Integer, Void, Void> {
 	@Override
 	protected void onProgressUpdate(Void... values) {
 		switch (typeAdapter) {
-		case 1:
+		case 3:
 			songAdapter.notifyDataSetChanged();
 			break;
 		case 2:
 			artistAdapter.notifyDataSetChanged();
 			break;
-		}
+		case 1: 
+			albumAdapter.notifyDataSetChanged();
+			break;
+			}
 		super.onProgressUpdate(values);
 	}
 
@@ -95,11 +109,14 @@ public class LoadImage extends AsyncTask<Integer, Void, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		switch (typeAdapter) {
-		case 1:
+		case 3:
 			songAdapter.notifyDataSetChanged();
 			break;
 		case 2:
 			artistAdapter.notifyDataSetChanged();
+			break;
+		case 1:
+			albumAdapter.notifyDataSetChanged();
 			break;
 		}
 

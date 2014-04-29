@@ -66,5 +66,6 @@
             android:focusableInTouchMode="false"
             android:text="Stronger" />
     </LinearLayout>
+    
 
 </RelativeLayout>
