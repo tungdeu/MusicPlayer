@@ -37,6 +37,7 @@ public class SongListFragment extends Fragment {
 	CustomSongListAdapter adapter;
 	ListView lst;
 	EditText txtSearch;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -108,40 +109,44 @@ public class SongListFragment extends Fragment {
 
 		txtSearch = (EditText) view.findViewById(R.id.simple_list_searchBox);
 		txtSearch.addTextChangedListener(new TextWatcher() {
-			
+
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 				// TODO Auto-generated method stub
-				adapter.setSource(Songs);
-				adapter.getFilter().filter(s);
-				LoadImage loadImage = new LoadImage(adapter);
-				loadImage.execute(lst.getFirstVisiblePosition());
+				if (s.length() != 0){
+					adapter.setSource(Songs);
+					adapter.getFilter().filter(s);
+					LoadImage loadImage = new LoadImage(adapter);
+					loadImage.execute(lst.getFirstVisiblePosition());
+				}
 			}
-			
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
 				// TODO Auto-generated method stub
-				
+
 			}
-		}) ;
-			
-		ImageButton btnClear = (ImageButton) view.findViewById(R.id.imageButton1);
+		});
+
+		ImageButton btnClear = (ImageButton) view
+				.findViewById(R.id.imageButton1);
 		btnClear.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				txtSearch.setText("");
 				adapter.setSource(Songs);
 				adapter.notifyDataSetChanged();
-				
+
 			}
 		});
 		return view;
