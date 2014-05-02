@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     tools:context=".PlaySong" >
     
-
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/play_song_imgView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
@@ -18,9 +17,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:layout_alignBottom="@+id/imageView1" >
+        android:layout_alignBottom="@+id/play_song_imgView" >
 
-<include layout="@layout/media_control"/></RelativeLayout>
+<include
+    layout="@layout/media_control"
+    android:alpha="0.1" />
+</RelativeLayout>
     
 
 </RelativeLayout>

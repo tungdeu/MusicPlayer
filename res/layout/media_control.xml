@@ -46,7 +46,7 @@
         android:layout_centerHorizontal="true" >
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/media_control_shuffle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -54,35 +54,35 @@
             android:src="@android:drawable/ic_menu_revert" />
 
         <ImageButton
-            android:id="@+id/imageButton1"
+            android:id="@+id/media_control_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageButton4"
+            android:layout_toRightOf="@+id/media_control_shuffle"
             android:src="@android:drawable/ic_media_previous" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/media_control_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageButton1"
+            android:layout_toRightOf="@+id/media_control_previous"
             android:src="@android:drawable/ic_media_play" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
+            android:id="@+id/media_control_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageButton2"
+            android:layout_toRightOf="@+id/media_control_play"
             android:src="@android:drawable/ic_media_next" />
 
         <ImageButton
-            android:id="@+id/imageButton5"
+            android:id="@+id/media_control_repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imageButton3"
+            android:layout_toRightOf="@+id/media_control_next"
             android:src="@android:drawable/ic_menu_rotate" />
     </RelativeLayout>
 

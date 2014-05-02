@@ -137,7 +137,7 @@ public class SongListFragment extends Fragment {
 		});
 
 		ImageButton btnClear = (ImageButton) view
-				.findViewById(R.id.imageButton1);
+				.findViewById(R.id.media_control_previous);
 		btnClear.setOnClickListener(new OnClickListener() {
 
 			@Override
