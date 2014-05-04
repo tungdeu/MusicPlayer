@@ -33,13 +33,12 @@
     </ListView>
 
     <ImageButton
-        android:id="@+id/media_control_previous"
+        android:id="@+id/simple_list_btnclear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/simple_list_searchBox"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/simple_list_searchBox"
-        android:alpha="0.1"
         android:src="@drawable/abs__ic_clear_search_api_holo_light" />
 
 </RelativeLayout>

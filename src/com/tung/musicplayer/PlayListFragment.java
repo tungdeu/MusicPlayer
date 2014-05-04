@@ -60,8 +60,8 @@ public class PlayListFragment extends Fragment {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				// TODO Auto-generated method stub
-				String playListName = Playlist.get(arg2).getPlayListName();
-				intent.putExtra("name", playListName);
+				long playListId = Playlist.get(arg2).getPlayListId();
+				intent.putExtra("id", playListId);
 				startActivity(intent);
 				
 			}

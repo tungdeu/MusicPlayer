@@ -14,17 +14,15 @@ import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
-import com.tung.musicplayer.R.drawable;
-import com.tung.musicplayer.R.id;
-import com.tung.musicplayer.R.layout;
-import com.tung.musicplayer.R.menu;
-import com.tung.musicplayer.SongListFragment.TitleComparator;
 import com.tung.object.BitmapProcess;
 
 public class ArtistDetail extends Activity {
@@ -32,6 +30,7 @@ public class ArtistDetail extends Activity {
 	public ImageView img;
 	public TextView txt;
 	public ArrayList<OfflineSong> Songs;
+	public Intent intentPlay;
 
 	// public MemoryLruCache mmr;
 
@@ -57,7 +56,8 @@ public class ArtistDetail extends Activity {
 			img.setImageResource(R.drawable.default_artwork);
 
 		Cursor cursor = this.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, MediaStore.Audio.Media.ARTIST +" ='"+artist+"'", null,
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+				MediaStore.Audio.Media.ARTIST + " ='" + artist + "'", null,
 				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 		Songs = new ArrayList<OfflineSong>();
 		String tmp_ext = "";
@@ -79,6 +79,7 @@ public class ArtistDetail extends Activity {
 
 				OfflineSong song = new OfflineSong();
 
+				song.setArtist(artist);
 				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
 
@@ -100,6 +101,24 @@ public class ArtistDetail extends Activity {
 		CustomSongListAdapter adapter = new CustomSongListAdapter(this, Songs);
 		lst.setAdapter(adapter);
 
+		intentPlay = new Intent(this, PlaySong.class);
+
+		lst.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				// TODO Auto-generated method stub
+				String path = Songs.get(arg2).getPath();
+				String artist = Songs.get(arg2).getArtist();
+				intentPlay.putExtra("artist", artist);
+				intentPlay.putExtra("path", path);
+				intentPlay.putExtra("flag", 2);
+				startActivity(intentPlay);
+
+			}
+
+		});
 	}
 
 	@Override

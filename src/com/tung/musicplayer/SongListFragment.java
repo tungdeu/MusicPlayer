@@ -25,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.actionbarsherlock.widget.SearchView;
 import com.tung.Entities.OfflineSong;
 import com.tung.object.LoadImage;
 import com.tung.screen.PlaySong;
@@ -100,7 +99,7 @@ public class SongListFragment extends Fragment {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				intentPlay.putExtra("path", path);
-
+				intentPlay.putExtra("flag", 1);
 				startActivity(intentPlay);
 
 			}
@@ -114,7 +113,7 @@ public class SongListFragment extends Fragment {
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				// TODO Auto-generated method stub
-				if (s.length() != 0){
+				if (s.length() != 0) {
 					adapter.setSource(Songs);
 					adapter.getFilter().filter(s);
 					LoadImage loadImage = new LoadImage(adapter);
@@ -137,7 +136,7 @@ public class SongListFragment extends Fragment {
 		});
 
 		ImageButton btnClear = (ImageButton) view
-				.findViewById(R.id.media_control_previous);
+				.findViewById(R.id.simple_list_btnclear);
 		btnClear.setOnClickListener(new OnClickListener() {
 
 			@Override

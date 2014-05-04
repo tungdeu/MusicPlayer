@@ -1,6 +1,8 @@
 package com.tung.screen;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import android.app.Activity;
@@ -15,11 +17,11 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.tung.musicplayer.R;
+import com.tung.object.CreateList;
 import com.tung.object.Ultilities;
 
 public class PlaySong extends Activity implements OnSeekBarChangeListener,
@@ -40,7 +42,12 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 	private int currentSongIndex = 0;
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
-
+	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
+	private Intent intentPlay;
+	private int listFlag;
+	private String album;
+	private String artist;
+	private long playListId = 1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,9 +62,30 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 		txtLast = (TextView) findViewById(R.id.media_control_txt_second);
 		imgCover = (ImageView) findViewById(R.id.play_song_imgView);
 
+		intentPlay = getIntent();
+		listFlag = intentPlay.getIntExtra("flag", 1);
+		album = intentPlay.getStringExtra("album");
+		artist = intentPlay.getStringExtra("artist");
+		playListId = intentPlay.getLongExtra("playlistId", 1);
+				
 		mp = new MediaPlayer();
 		ulti = new Ultilities();
-
+		CreateList creatList = new CreateList(this);
+		
+		switch (listFlag) {
+		case 1:
+			songsList = creatList.CreateAllSongList();
+			break;
+		case 2:
+			songsList = creatList.CreateSongListFromArtist(artist);
+			break;
+		case 3:
+			songsList = creatList.CreateSongListFromAlbum(album);
+			break;
+		case 4:
+			songsList = creatList.CreateSongListFromPlayList(playListId);
+		}
+		
 		skbarSongProgress.setOnSeekBarChangeListener(this);
 		mp.setOnCompletionListener(this);
 
@@ -81,38 +109,38 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 			}
 		});
 
-		btnNext.setOnClickListener(new OnClickListener() {
+		 btnNext.setOnClickListener(new OnClickListener() {
+		
+		 @Override
+		 public void onClick(View v) {
+		 // TODO Auto-generated method stub
+		 if (currentSongIndex < (songsList.size() - 1)) {
+		 playSong(currentSongIndex + 1);
+		 currentSongIndex = currentSongIndex + 1;
+		 } else {
+		 // play first song
+		 playSong(0);
+		 currentSongIndex = 0;
+		 }
+		
+		 }
+		 });
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (currentSongIndex < (songsList.size() - 1)) {
-					playSong(currentSongIndex + 1);
-					currentSongIndex = currentSongIndex + 1;
-				} else {
-					// play first song
-					playSong(0);
-					currentSongIndex = 0;
-				}
-
-			}
-		});
-
-		btnPrevious.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (currentSongIndex > 0) {
-					playSong(currentSongIndex - 1);
-					currentSongIndex = currentSongIndex - 1;
-				} else {
-					// play last song
-					playSong(songsList.size() - 1);
-					currentSongIndex = songsList.size() - 1;
-				}
-			}
-		});
+		 btnPrevious.setOnClickListener(new OnClickListener() {
+		
+		 @Override
+		 public void onClick(View v) {
+		 // TODO Auto-generated method stub
+		 if (currentSongIndex > 0) {
+		 playSong(currentSongIndex - 1);
+		 currentSongIndex = currentSongIndex - 1;
+		 } else {
+		 // play last song
+		 playSong(songsList.size() - 1);
+		 currentSongIndex = songsList.size() - 1;
+		 }
+		 }
+		 });
 
 		btnShuffle.setOnClickListener(new OnClickListener() {
 
@@ -162,43 +190,43 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == 100) {
-			currentSongIndex = data.getExtras().getInt("songIndex");
-			// play selected song
-			playSong(currentSongIndex);
-		}
-
+		 super.onActivityResult(requestCode, resultCode, data);
+		 if (resultCode == 100) {
+		 currentSongIndex = data.getExtras().getInt("songIndex");
+		 // play selected song
+		 playSong(currentSongIndex);
+		 }
+		
 	}
 
-	public void playSong(int songIndex) {
-		// Play song
-		try {
-			mp.reset();
-			mp.setDataSource(songsList.get(songIndex).get("songPath"));
-			mp.prepare();
-			mp.start();
-			// Displaying Song title
-			String songTitle = songsList.get(songIndex).get("songTitle");
-			songTitleLabel.setText(songTitle);
-
-			// Changing Button Image to pause image
-			btnPlay.setImageResource(R.drawable.btn_pause);
-
-			// set Progress bar values
-			skbarSongProgress.setProgress(0);
-			skbarSongProgress.setMax(100);
-
-			// Updating progress bar
-			updateProgressBar();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	 public void playSong(int songIndex) {
+	 // Play song
+	 try {
+	 mp.reset();
+	 mp.setDataSource(songsList.get(songIndex).get("songPath"));
+	 mp.prepare();
+	 mp.start();
+	 // Displaying Song title
+	 //String songTitle = songsList.get(songIndex).get("songTitle");
+	 //songTitleLabel.setText(songTitle);
+	
+	 // Changing Button Image to pause image
+	 //btnPlay.setImageResource(R.drawable.btn_pause);
+	
+	 // set Progress bar values
+	 skbarSongProgress.setProgress(0);
+	 skbarSongProgress.setMax(100);
+	
+	 // Updating progress bar
+	 updateProgressBar();
+	 } catch (IllegalArgumentException e) {
+	 e.printStackTrace();
+	 } catch (IllegalStateException e) {
+	 e.printStackTrace();
+	 } catch (IOException e) {
+	 e.printStackTrace();
+	 }
+	 }
 
 	public void updateProgressBar() {
 		mHandler.postDelayed(mUpdateTimeTask, 100);
@@ -261,27 +289,27 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 
 	@Override
 	public void onCompletion(MediaPlayer arg0) {
-		// TODO Auto-generated method stub
-		// check for repeat is ON or OFF
-		if (isRepeat) {
-			// repeat is on play same song again
-			playSong(currentSongIndex);
-		} else if (isShuffle) {
-			// shuffle is on - play a random song
-			Random rand = new Random();
-			currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
-			playSong(currentSongIndex);
-		} else {
-			// no repeat or shuffle ON - play next song
-			if (currentSongIndex < (songsList.size() - 1)) {
-				playSong(currentSongIndex + 1);
-				currentSongIndex = currentSongIndex + 1;
-			} else {
-				// play first song
-				playSong(0);
-				currentSongIndex = 0;
-			}
-		}
+		 // TODO Auto-generated method stub
+		 // check for repeat is ON or OFF
+		 if (isRepeat) {
+		 // repeat is on play same song again
+		 playSong(currentSongIndex);
+		 } else if (isShuffle) {
+		 // shuffle is on - play a random song
+		 Random rand = new Random();
+		 currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
+		 playSong(currentSongIndex);
+		 } else {
+		 // no repeat or shuffle ON - play next song
+		 if (currentSongIndex < (songsList.size() - 1)) {
+		 playSong(currentSongIndex + 1);
+		 currentSongIndex = currentSongIndex + 1;
+		 } else {
+		 // play first song
+		 playSong(0);
+		 currentSongIndex = 0;
+		 }
+		 }
 	}
 
 	public void onDestroy() {
