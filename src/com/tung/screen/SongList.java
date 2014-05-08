@@ -18,7 +18,7 @@ import com.tung.musicplayer.TabsPagerAdapter;
 
 public class SongList extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
-	private ActionBar.Tab Tab1, Tab2, Tab3, Tab4, Tab5;
+	private ActionBar.Tab Tab1, Tab2, Tab3, Tab4, Tab5, Tab6;
 	private ViewPager mViewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
@@ -48,12 +48,13 @@ public class SongList extends SherlockFragmentActivity implements
 				});
 		mViewPager.setAdapter(mAdapter);
 
-		// Add 3 tabs, specifying the tab's text and TabListener
+		// Add tabs, specifying the tab's text and TabListener
 		Tab1 = actionBar.newTab().setText("Songs");
 		Tab2 = actionBar.newTab().setText("Artists");
 		Tab3 = actionBar.newTab().setText("Albums");
 		Tab4 = actionBar.newTab().setText("Playlists");
 		Tab5 = actionBar.newTab().setText("Download");
+		Tab6 = actionBar.newTab().setText("Music Chart");
 		
 
 		Tab1.setTabListener(this);
@@ -61,12 +62,14 @@ public class SongList extends SherlockFragmentActivity implements
 		Tab3.setTabListener(this);
 		Tab4.setTabListener(this);
 		Tab5.setTabListener(this);
+		Tab6.setTabListener(this);
 
 		actionBar.addTab(Tab1);
 		actionBar.addTab(Tab2);
 		actionBar.addTab(Tab3);
 		actionBar.addTab(Tab4);
 		actionBar.addTab(Tab5);
+		actionBar.addTab(Tab6);
 		
 		
 		sMenu = new SlidingMenu(this);
