@@ -67,7 +67,7 @@ public class SongListFragment extends Fragment {
 
 				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.MediaColumns.TITLE));
 				if (tmp.isEmpty())
@@ -98,6 +98,8 @@ public class SongListFragment extends Fragment {
 					long arg3) {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
+				long audioId = Songs.get(arg2).getAudioId();
+				intentPlay.putExtra("id", audioId);
 				intentPlay.putExtra("path", path);
 				intentPlay.putExtra("flag", 1);
 				startActivity(intentPlay);

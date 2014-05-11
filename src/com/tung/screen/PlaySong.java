@@ -2,15 +2,17 @@ package com.tung.screen;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,8 +22,11 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
 import com.tung.object.CreateList;
+import com.tung.object.PlayBackService;
+import com.tung.object.PlayBackService.MusicBinder;
 import com.tung.object.Ultilities;
 
 public class PlaySong extends Activity implements OnSeekBarChangeListener,
@@ -42,12 +47,14 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 	private int currentSongIndex = 0;
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
-	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
+	private ArrayList<OfflineSong> songsList = new ArrayList<OfflineSong>();
 	private Intent intentPlay;
 	private int listFlag;
 	private String album;
 	private String artist;
 	private long playListId = 1;
+	private PlayBackService pbServ ;
+	private boolean musicBound=  false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +75,7 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 		album = intentPlay.getStringExtra("album");
 		artist = intentPlay.getStringExtra("artist");
 		playListId = intentPlay.getLongExtra("playlistId", 1);
-
+		
 		mp = new MediaPlayer();
 		ulti = new Ultilities();
 		CreateList creatList = new CreateList(this);
@@ -189,7 +196,25 @@ public class PlaySong extends Activity implements OnSeekBarChangeListener,
 		});
 
 	}
+	
+	private ServiceConnection musicConnection = new ServiceConnection(){
 
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			MusicBinder binder = (MusicBinder)service;
+			//get service
+			pbServ = binder.getService();
+			//pass list
+			pbServ.setList(songsList);
+			musicBound = true;
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			musicBound = false;
+		}
+	};
+	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == 100) {

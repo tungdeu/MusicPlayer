@@ -93,6 +93,7 @@ public class ArtistDetail extends Activity {
 							.getString(cursor
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 				song.setTitle(tmp);
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				Songs.add(song);
 			}
 		} while (cursor.moveToNext());
@@ -111,6 +112,8 @@ public class ArtistDetail extends Activity {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				String artist = Songs.get(arg2).getArtist();
+				long audioID = Songs.get(arg2).getAudioId();
+				intentPlay.putExtra("id", audioID);
 				intentPlay.putExtra("artist", artist);
 				intentPlay.putExtra("path", path);
 				intentPlay.putExtra("flag", 2);

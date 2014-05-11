@@ -67,15 +67,6 @@ public class AlbumList extends Fragment {
 
 				album.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.MediaColumns.TITLE));
-				// if (tmp.isEmpty())
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				// if (tmp.isEmpty())
-				// tmp = cursor
-				// .getString(cursor
-				// .getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Audio.Media.ALBUM));
@@ -92,12 +83,7 @@ public class AlbumList extends Fragment {
 					tmp = cursor.getString(cursor
 							.getColumnIndex(MediaStore.EXTRA_MEDIA_ARTIST));
 				album.setArtist(tmp);
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.Audio.Media.ALBUM));
-				// if (tmp.isEmpty())
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_ALBUM));
-				// song.setAlbum(tmp);
+
 
 				boolean found = false;
 				for (OfflineSong p : Album) {

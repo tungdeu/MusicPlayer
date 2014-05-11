@@ -11,7 +11,7 @@ import com.tung.Entities.OfflineSong;
 
 public class CreateList {
 
-	private ArrayList<HashMap<String, String>> songList = new ArrayList<HashMap<String, String>>();
+	private ArrayList<OfflineSong> songList = new ArrayList<OfflineSong>();
 	private Activity activity;
 
 	public CreateList(Activity act) {
@@ -19,7 +19,7 @@ public class CreateList {
 
 	}
 
-	public ArrayList<HashMap<String, String>> CreateAllSongList() {
+	public ArrayList<OfflineSong> CreateAllSongList() {
 		Cursor cursor = activity.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
 				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
@@ -39,7 +39,7 @@ public class CreateList {
 							.getString(
 									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
 							.contains("Ringtone")) {
-				HashMap<String, String> song = new HashMap<String, String>();
+				OfflineSong song = new OfflineSong();
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.MediaColumns.TITLE));
@@ -50,10 +50,10 @@ public class CreateList {
 					tmp = cursor
 							.getString(cursor
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.put("songTitle", tmp);
-				song.put("songPath", cursor.getString(cursor
+				song.setTitle(tmp);
+				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				songList.add(song);
 			}
 		} while (cursor.moveToNext());
@@ -61,8 +61,7 @@ public class CreateList {
 		return songList;
 	}
 
-	public ArrayList<HashMap<String, String>> CreateSongListFromArtist(
-			String artist) {
+	public ArrayList<OfflineSong> CreateSongListFromArtist(String artist) {
 		Cursor cursor = activity.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
 				MediaStore.Audio.Media.ARTIST + " ='" + artist + "'", null,
@@ -85,7 +84,7 @@ public class CreateList {
 									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
 							.contains("Ringtone")) {
 
-				HashMap<String, String> song = new HashMap<String, String>();
+				OfflineSong song = new OfflineSong();
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.MediaColumns.TITLE));
@@ -96,18 +95,17 @@ public class CreateList {
 					tmp = cursor
 							.getString(cursor
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.put("songTitle", tmp);
-				song.put("path", cursor.getString(cursor
+				song.setTitle(tmp);
+				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				songList.add(song);
 			}
 		} while (cursor.moveToNext());
 		return songList;
 	}
 
-	public ArrayList<HashMap<String, String>> CreateSongListFromAlbum(
-			String album) {
+	public ArrayList<OfflineSong> CreateSongListFromAlbum(String album) {
 		Cursor cursor = activity.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
 				MediaStore.Audio.Media.ALBUM + " ='" + album + "'", null,
@@ -130,7 +128,7 @@ public class CreateList {
 									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
 							.contains("Ringtone")) {
 
-				HashMap<String, String> song = new HashMap<String, String>();
+				OfflineSong song = new OfflineSong();
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.MediaColumns.TITLE));
@@ -141,23 +139,22 @@ public class CreateList {
 					tmp = cursor
 							.getString(cursor
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.put("songTitle", tmp);
-				song.put("path", cursor.getString(cursor
+				song.setTitle(tmp);
+				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				songList.add(song);
 			}
 		} while (cursor.moveToNext());
 		return songList;
 	}
 
-	public ArrayList<HashMap<String, String>> CreateSongListFromPlayList(
-			long playListId) {
+	public ArrayList<OfflineSong> CreateSongListFromPlayList(long playListId) {
 		Cursor cursor = activity.getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
 				MediaStore.Audio.Playlists._ID + " ='" + playListId + "'",
 				null, "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 
-		
 		String tmp_ext = "";
 		String tmp = "";
 		String extension = "mp3";
@@ -174,7 +171,7 @@ public class CreateList {
 									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
 							.contains("Ringtone")) {
 
-				HashMap<String, String> song = new HashMap<String, String>();
+				OfflineSong song = new OfflineSong();
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.MediaColumns.TITLE));
@@ -185,9 +182,10 @@ public class CreateList {
 					tmp = cursor
 							.getString(cursor
 									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.put("songTitle",tmp);
-				song.put("path",cursor.getString(cursor
+				song.setTitle(tmp);
+				song.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				songList.add(song);
 			}
 		} while (cursor.moveToNext());

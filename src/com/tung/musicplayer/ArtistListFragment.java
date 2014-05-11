@@ -36,7 +36,6 @@ public class ArtistListFragment extends Fragment {
 	CustomArtistListAdapter adapter;
 	ListView lst;
 	Intent intent;
-	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +43,7 @@ public class ArtistListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.simple_list, container, false);
 
 		Cursor cursor = getActivity().getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,null, null,
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
 				"LOWER(" + MediaStore.Audio.Media.ARTIST + ") ASC");
 		Artist = new ArrayList<OfflineSong>();
 		String tmp_ext = "";
@@ -68,39 +67,19 @@ public class ArtistListFragment extends Fragment {
 
 				artist.setPath(cursor.getString(cursor
 						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.MediaColumns.TITLE));
-				// if (tmp.isEmpty())
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				// if (tmp.isEmpty())
-				// tmp = cursor
-				// .getString(cursor
-				// .getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
 
 				tmp = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Audio.Media.ARTIST));
 				if (tmp.isEmpty())
 					tmp = cursor.getString(cursor
 							.getColumnIndex(MediaStore.EXTRA_MEDIA_ARTIST));
-				// song.setArtist(tmp);
-				artist.setArtist(tmp);
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.Audio.Media.ALBUM));
-				// if (tmp.isEmpty())
-				// tmp = cursor.getString(cursor
-				// .getColumnIndex(MediaStore.EXTRA_MEDIA_ALBUM));
-				// song.setAlbum(tmp);
 
+				artist.setArtist(tmp);
+				artist.setAudioId(cursor.getLong(cursor
+						.getColumnIndex(MediaStore.MediaColumns._ID)));
 				boolean found = false;
 				for (OfflineSong p : Artist) {
-					if (p.getArtist().equals(artist.getArtist())) { // Or use an
-																	// accessor
-																	// function
-																	// for
-																	// `nomeParagem`
-																	// if
-																	// appropriate
+					if (p.getArtist().equals(artist.getArtist())) { 
 						found = true;
 						break;
 					}
@@ -119,7 +98,6 @@ public class ArtistListFragment extends Fragment {
 		LoadImage loadImage = new LoadImage(adapter, Artist);
 		loadImage.execute(lst.getFirstVisiblePosition());
 
-		
 		lst.setOnScrollListener(new OnScrollListener() {
 
 			@Override
@@ -136,9 +114,9 @@ public class ArtistListFragment extends Fragment {
 
 			}
 		});
-		
+
 		intent = new Intent(getActivity(), ArtistDetail.class);
-		
+
 		lst.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -146,16 +124,16 @@ public class ArtistListFragment extends Fragment {
 					long arg3) {
 				String artist = Artist.get(arg2).getArtist();
 				String path = Artist.get(arg2).getPath();
+				long audioId = Artist.get(arg2).getAudioId();
+				intent.putExtra("id", audioId);
 				intent.putExtra("artist", artist);
-				intent.putExtra("path",path);
+				intent.putExtra("path", path);
 				startActivity(intent);
-				
-				
+
 			}
 		});
 
 		return view;
 	}
-
 
 }
