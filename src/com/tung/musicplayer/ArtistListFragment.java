@@ -29,6 +29,7 @@ import com.tung.object.BitmapProcess;
 import com.tung.object.LoadImage;
 import com.tung.object.MemoryLruCache;
 import com.tung.screen.ArtistDetail;
+import com.tung.screen.MusicChart;
 
 public class ArtistListFragment extends Fragment {
 

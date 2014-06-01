@@ -26,12 +26,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.tung.Entities.OfflineSong;
+import com.tung.object.CreateList;
 import com.tung.object.LoadImage;
 import com.tung.screen.PlaySong;
 
 public class SongListFragment extends Fragment {
 
-	List<OfflineSong> Songs;
+	ArrayList<OfflineSong> Songs;
 	Intent intentPlay;
 	CustomSongListAdapter adapter;
 	ListView lst;
@@ -42,49 +43,50 @@ public class SongListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.simple_list, container, false);
 
-		Cursor cursor = getActivity().getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
-				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
-		Songs = new ArrayList<OfflineSong>();
-		String tmp_ext = "";
-		String tmp = "";
-		String extension = "mp3";
-
-		cursor.moveToFirst();
-		do {
-			tmp = cursor
-					.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-			tmp_ext = tmp.substring(tmp.length() - 3);
-			tmp = tmp.substring(0, tmp.length() - 4);
-			if (tmp_ext.compareTo(extension) == 0
-					&& !cursor
-							.getString(
-									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-							.contains("Ringtone")) {
-
-				OfflineSong song = new OfflineSong();
-
-				song.setPath(cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
-				tmp = cursor.getString(cursor
-						.getColumnIndex(MediaStore.MediaColumns.TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor.getString(cursor
-							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor
-							.getString(cursor
-									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.setTitle(tmp);
-
-				Songs.add(song);
-
-			}
-
-		} while (cursor.moveToNext());
-		Collections.sort(Songs, new TitleComparator());
+//		Cursor cursor = getActivity().getContentResolver().query(
+//				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
+//				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+//		Songs = new ArrayList<OfflineSong>();
+//		String tmp_ext = "";
+//		String tmp = "";
+//		String extension = "mp3";
+//
+//		cursor.moveToFirst();
+//		do {
+//			tmp = cursor
+//					.getString(cursor
+//							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
+//			tmp_ext = tmp.substring(tmp.length() - 3);
+//			tmp = tmp.substring(0, tmp.length() - 4);
+//			if (tmp_ext.compareTo(extension) == 0
+//					&& !cursor
+//							.getString(
+//									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
+//							.contains("Ringtone")) {
+//
+//				OfflineSong song = new OfflineSong();
+//
+//				song.setPath(cursor.getString(cursor
+//						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+//				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
+//				tmp = cursor.getString(cursor
+//						.getColumnIndex(MediaStore.MediaColumns.TITLE));
+//				if (tmp.isEmpty())
+//					tmp = cursor.getString(cursor
+//							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
+//				if (tmp.isEmpty())
+//					tmp = cursor
+//							.getString(cursor
+//									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
+//				song.setTitle(tmp);
+//
+//				Songs.add(song);
+//
+//			}
+//
+//		} while (cursor.moveToNext());
+//		Collections.sort(Songs, new TitleComparator());
+		Songs = CreateList.getInstance().CreateAllSongList(getActivity());
 		lst = (ListView) view.findViewById(R.id.listView1);
 		adapter = new CustomSongListAdapter(getActivity(), Songs);
 		lst.setAdapter(adapter);
@@ -98,7 +100,7 @@ public class SongListFragment extends Fragment {
 					long arg3) {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
-				long audioId = Songs.get(arg2).getAudioId();
+				int audioId = arg2;
 				intentPlay.putExtra("id", audioId);
 				intentPlay.putExtra("path", path);
 				intentPlay.putExtra("flag", 1);

@@ -32,6 +32,7 @@ public class SongList extends SherlockFragmentActivity implements
 		actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		//actionBar.get
 		
 
@@ -71,16 +72,6 @@ public class SongList extends SherlockFragmentActivity implements
 		actionBar.addTab(Tab5);
 		actionBar.addTab(Tab6);
 		
-		
-		sMenu = new SlidingMenu(this);
-		sMenu.setMode(SlidingMenu.LEFT);
-		sMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        sMenu.setShadowWidthRes(R.dimen.shadow_width);
-        sMenu.setShadowDrawable(R.drawable.shadow);
-        sMenu.setBehindOffset(150);
-        sMenu.setFadeDegree(0.35f);
-        sMenu.attachToActivity(this, SlidingMenu.SLIDING_WINDOW);
-        sMenu.setMenu(R.layout.activity_home);
 	}
 
 	@Override

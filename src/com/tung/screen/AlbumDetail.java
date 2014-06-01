@@ -115,7 +115,7 @@ public class AlbumDetail extends Activity {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				String album = Songs.get(arg2).getAlbum();
-				long audioID = Songs.get(arg2).getAudioId();
+				int audioID = arg2;
 				intentPlay.putExtra("id", audioID);
 				intentPlay.putExtra("album", album);
 				intentPlay.putExtra("path", path);

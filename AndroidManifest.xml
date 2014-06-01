@@ -50,6 +50,12 @@
             android:name="com.tung.screen.PlayListDetail"
             android:label="@layout/playlist_detail" >
         </activity>
+        <activity 
+            android:name="com.tung.screen.MusicChart" 
+            android:label="@layout/chart_layout" 
+            android:permission="android.permission.INTERNET">
+            
+        </activity>
     </application>
 
 </manifest>

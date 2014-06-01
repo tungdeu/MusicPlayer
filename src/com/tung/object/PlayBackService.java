@@ -57,7 +57,7 @@ public class PlayBackService extends Service implements
 	}
 
 	public class MusicBinder extends Binder {
-		PlayBackService getService() {
+		public PlayBackService getService() {
 			return PlayBackService.this;
 		}
 	}

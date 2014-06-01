@@ -112,7 +112,7 @@ public class ArtistDetail extends Activity {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				String artist = Songs.get(arg2).getArtist();
-				long audioID = Songs.get(arg2).getAudioId();
+				int audioID = arg2;
 				intentPlay.putExtra("id", audioID);
 				intentPlay.putExtra("artist", artist);
 				intentPlay.putExtra("path", path);

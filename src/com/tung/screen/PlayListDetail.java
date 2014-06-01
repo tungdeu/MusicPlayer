@@ -91,7 +91,7 @@ public class PlayListDetail extends Activity {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				long id = playListId;
-				long audioID = Songs.get(arg2).getAudioId();
+				int audioID = arg2;
 				intentPlay.putExtra("id", audioID);
 				intentPlay.putExtra("playlistId",id);
 				intentPlay.putExtra("path", path);
