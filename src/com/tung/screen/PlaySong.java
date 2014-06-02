@@ -35,7 +35,7 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
 	private TextView txtFirst;
 	private TextView txtLast;
 	private ImageView imgCover;
-	private MediaPlayer mp;
+//	private MediaPlayer CreateList.getInstance().getMediaPlayer();
 	Ultilities ulti;
 	private Handler mHandler = new Handler();
 	private int currentSongIndex = 0;
@@ -72,25 +72,25 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
 		artist = intentPlay.getStringExtra("artist");
 		playListId = intentPlay.getLongExtra("playlistId", 1);
 		songPos = intentPlay.getIntExtra("id",2);
-		mp = new MediaPlayer();
+//		CreateList.getInstance().getMediaPlayer() = CreateList.getInstance().getMediaPlayer();
 		ulti = new Ultilities();
 
 		switch (listFlag) {
 		case 1:
-			songsList = CreateList.getInstance().CreateAllSongList(this);
+			songsList = CreateList.getInstance().getSongList();
 			break;
-		case 2:
-			songsList = CreateList.getInstance().CreateSongListFromArtist(artist,this);
-			break;
-		case 3:
-			songsList = CreateList.getInstance().CreateSongListFromAlbum(album,this);
-			break;
-		case 4:
-			songsList = CreateList.getInstance().CreateSongListFromPlayList(playListId,this);
+//		case 2:
+//			songsList = CreateList.getInstance().CreateSongListFromArtist(artist,this);
+//			break;
+//		case 3:
+//			songsList = CreateList.getInstance().CreateSongListFromAlbum(album,this);
+//			break;
+//		case 4:
+//			songsList = CreateList.getInstance().CreateSongListFromPlayList(playListId,this);
 		}
 
 		skbarSongProgress.setOnSeekBarChangeListener(this); // Important
-        mp.setOnCompletionListener(this); // Important
+        CreateList.getInstance().getMediaPlayer().setOnCompletionListener(this); // Important
  
 
         // By default play first song
@@ -106,16 +106,17 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
             @Override
             public void onClick(View arg0) {
                 // check for already playing
-                if(mp.isPlaying()){
-                    if(mp!=null){
-                        mp.pause();
+                if(CreateList.getInstance().getMediaPlayer().isPlaying()){
+                    if(CreateList.getInstance().getMediaPlayer()!=null){
+                        CreateList.getInstance().getMediaPlayer().pause();
                         // Changing button image to play button
                        // btnPlay.setImageResource(R.drawable.btn_play);
                     }
                 }else{
                     // Resume song
-                    if(mp!=null){
-                        mp.start();
+                    if(CreateList.getInstance().getMediaPlayer()!=null){
+                        CreateList.getInstance().getMediaPlayer().start();
+                        mHandler.postDelayed(mUpdateTimeTask, 1000);
                         // Changing button image to pause button
                        // btnPlay.setImageResource(R.drawable.btn_pause);
                     }
@@ -139,13 +140,13 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
             @Override
             public void onClick(View arg0) {
                 // check if next song is there or not
-                if(currentSongIndex < (songsList.size() - 1)){
-                    playSong(currentSongIndex + 1);
-                    currentSongIndex = currentSongIndex + 1;
+                if(songPos < (songsList.size() - 1)){
+                    playSong(songPos + 1);
+                    songPos = songPos + 1;
                 }else{
                     // play first song
                     playSong(0);
-                    currentSongIndex = 0;
+                    songPos = 0;
                 }
  
             }
@@ -159,13 +160,13 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
  
             @Override
             public void onClick(View arg0) {
-                if(currentSongIndex > 0){
-                    playSong(currentSongIndex - 1);
-                    currentSongIndex = currentSongIndex - 1;
+                if(songPos > 0){
+                    playSong(songPos - 1);
+                    songPos = songPos - 1;
                 }else{
                     // play last song
                     playSong(songsList.size() - 1);
-                    currentSongIndex = songsList.size() - 1;
+                    songPos = songsList.size() - 1;
                 }
  
             }
@@ -257,10 +258,10 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
     public void  playSong(int songIndex){
         // Play song
         try {
-            mp.reset();
-            mp.setDataSource(songsList.get(songIndex).getPath());
-            mp.prepare();
-            mp.start();
+            CreateList.getInstance().getMediaPlayer().reset();
+            CreateList.getInstance().getMediaPlayer().setDataSource(songsList.get(songIndex).getPath());
+            CreateList.getInstance().getMediaPlayer().prepare();
+            CreateList.getInstance().getMediaPlayer().start();
             // Displaying Song title
             String songTitle = songsList.get(songIndex).getTitle();
       //      songTitleLabel.setText(songTitle);
@@ -287,7 +288,7 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
      * Update timer on seekbar
      * */
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
+        mHandler.postDelayed(mUpdateTimeTask, 1000);
     }   
  
     /**
@@ -295,8 +296,9 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
      * */
     private Runnable mUpdateTimeTask = new Runnable() {
            public void run() {
-               long totalDuration = mp.getDuration();
-               long currentDuration = mp.getCurrentPosition();
+        	   if (CreateList.getInstance().getMediaPlayer().isPlaying()){
+               long totalDuration = CreateList.getInstance().getMediaPlayer().getDuration();
+               long currentDuration = CreateList.getInstance().getMediaPlayer().getCurrentPosition();
  
                // Displaying Total Duration time
                txtLast.setText(""+ulti.milliSecondsToTimer(totalDuration));
@@ -309,7 +311,8 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
                skbarSongProgress.setProgress(progress);
  
                // Running this thread after 100 milliseconds
-               mHandler.postDelayed(this, 100);
+               mHandler.postDelayed(this, 1000);
+        	   }
            }
         };
  
@@ -336,11 +339,11 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         mHandler.removeCallbacks(mUpdateTimeTask);
-        int totalDuration = mp.getDuration();
+        int totalDuration = CreateList.getInstance().getMediaPlayer().getDuration();
         int currentPosition = ulti.progressToTimer(seekBar.getProgress(), totalDuration);
  
         // forward or backward to certain seconds
-        mp.seekTo(currentPosition);
+        CreateList.getInstance().getMediaPlayer().seekTo(currentPosition);
  
         // update timer progress again
         updateProgressBar();
@@ -379,9 +382,9 @@ public class PlaySong extends Activity implements OnCompletionListener, SeekBar.
     @Override
      public void onDestroy(){
      super.onDestroy();
-//     mHandler.removeCallbacks(mUpdateTimeTask);
-     mp.release();
-//        finish();
+     mHandler.removeCallbacks(mUpdateTimeTask);
+//     CreateList.getInstance().getMediaPlayer().release();
+     finish();
      }
  
 }

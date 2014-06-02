@@ -17,6 +17,7 @@ import android.widget.MediaController.MediaPlayerControl;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
+import com.tung.object.CreateList;
 import com.tung.object.PlayBackService;
 import com.tung.object.PlayBackService.MusicBinder;
 
@@ -42,22 +43,23 @@ public class PlaySongS extends Activity implements MediaPlayerControl{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play_song);
 
-		//retrieve list view
-		songView = (ListView)findViewById(R.id.song_list);
-		//instantiate list
+//		//retrieve list view
+//		songView = (ListView)findViewById(R.id.song_list);
+//		//instantiate list
+//		songList = new ArrayList<OfflineSong>();
+//		//get songs from device
+//		getSongList();
+//		//sort alphabetically by title
+//		Collections.sort(songList, new Comparator<OfflineSong>(){
+//			public int compare(Song a, Song b){
+//				return a.getTitle().compareTo(b.getTitle());
+//			}
+//		});
+//		//create and set adapter
+//		SongAdapter songAdt = new SongAdapter(this, songList);
+//		songView.setAdapter(songAdt);
 		songList = new ArrayList<OfflineSong>();
-		//get songs from device
-		getSongList();
-		//sort alphabetically by title
-		Collections.sort(songList, new Comparator<OfflineSong>(){
-			public int compare(Song a, Song b){
-				return a.getTitle().compareTo(b.getTitle());
-			}
-		});
-		//create and set adapter
-		SongAdapter songAdt = new SongAdapter(this, songList);
-		songView.setAdapter(songAdt);
-
+//		songList = CreateList.getInstance().CreateAllSongList(this);
 		//setup controller
 		setController();
 	}
@@ -119,7 +121,7 @@ public class PlaySongS extends Activity implements MediaPlayerControl{
 		});
 		//set and show
 		controller.setMediaPlayer(this);
-		controller.setAnchorView(findViewById(R.id.song_list));
+//		controller.setAnchorView(findViewById(R.id.song_list));
 		controller.setEnabled(true);
 	}
 	private void playNext(){
@@ -235,8 +237,8 @@ public class PlaySongS extends Activity implements MediaPlayerControl{
 
 	@Override
 	protected void onDestroy() {
-		stopService(playIntent);
-		musicSrv=null;
+		//stopService(playIntent);
+		//musicSrv=null;
 		super.onDestroy();
 	}
 }

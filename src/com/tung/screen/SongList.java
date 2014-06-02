@@ -2,6 +2,7 @@ package com.tung.screen;
 
 import java.util.List;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -11,10 +12,10 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
 import com.tung.musicplayer.TabsPagerAdapter;
+import com.tung.object.CreateList;
 
 public class SongList extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
@@ -22,7 +23,7 @@ public class SongList extends SherlockFragmentActivity implements
 	private ViewPager mViewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
-	SlidingMenu sMenu;
+	//SlidingMenu sMenu;
 	List<OfflineSong> Songs;
 
 	@Override
@@ -72,6 +73,8 @@ public class SongList extends SherlockFragmentActivity implements
 		actionBar.addTab(Tab5);
 		actionBar.addTab(Tab6);
 		
+		MediaPlayer mp = new MediaPlayer();
+		CreateList.getInstance().setMediaPlayer(mp);
 	}
 
 	@Override
@@ -79,7 +82,7 @@ public class SongList extends SherlockFragmentActivity implements
 		int itemId = item.getItemId();
 	    switch (itemId) {
 	    case android.R.id.home:
-	        sMenu.toggle();
+//	        sMenu.toggle();
 
 	        // Toast.makeText(this, "home pressed", Toast.LENGTH_LONG).show();
 	        break;

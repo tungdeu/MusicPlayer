@@ -27,6 +27,7 @@ public class MusicChart extends Activity{
 		arrCate = api.getListArtist();
 		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrCate);
 		lst.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 		
 		return view;
 	}
