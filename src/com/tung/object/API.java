@@ -22,10 +22,7 @@ public class API {
         final String NAMESPACE = "http://tempuri.org/";
         final String URL = "http://tungconcobebe.somee.com/WebService.asmx";
         //những cái trên nếu webservice của bạn tên khác thì phải đổi
-        StrictMode.ThreadPolicy policy = new
-        		 StrictMode.ThreadPolicy.Builder()
-        		 .permitAll().build();
-        		 StrictMode.setThreadPolicy(policy);
+
 
         SoapObject table = null;                        // Cái này chứa table của dataset trả về thông qua SoapObject
         SoapObject client = null;                        // Its the client pettition to the web service(đoan này mình cũng chưa rõ)

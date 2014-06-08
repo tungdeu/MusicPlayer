@@ -70,4 +70,9 @@ public class CustomPlayListAdapter extends BaseAdapter {
 
 	}
 
+	public void setSoure(List<PlayListE> playlist2) {
+		Playlist = playlist2;
+		
+	}
+
 }

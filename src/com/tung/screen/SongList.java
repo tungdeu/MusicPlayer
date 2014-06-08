@@ -55,7 +55,7 @@ public class SongList extends SherlockFragmentActivity implements
 		Tab2 = actionBar.newTab().setText("Artists");
 		Tab3 = actionBar.newTab().setText("Albums");
 		Tab4 = actionBar.newTab().setText("Playlists");
-		Tab5 = actionBar.newTab().setText("Download");
+		Tab5 = actionBar.newTab().setText("Online Service");
 		Tab6 = actionBar.newTab().setText("Music Chart");
 		
 

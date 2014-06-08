@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
 import com.tung.object.BitmapProcess;
+import com.tung.object.CreateList;
 
 public class ArtistDetail extends Activity {
 
@@ -55,49 +56,33 @@ public class ArtistDetail extends Activity {
 		else
 			img.setImageResource(R.drawable.default_artwork);
 
+		String[] projection = { MediaStore.Audio.Media.DATA,
+				MediaStore.Audio.Media.ARTIST, 
+				MediaStore.Audio.Media.ALBUM,
+				MediaStore.Audio.Media.TITLE 
+				};
+		
 		Cursor cursor = this.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
 				MediaStore.Audio.Media.ARTIST + " ='" + artist + "'", null,
 				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 		Songs = new ArrayList<OfflineSong>();
-		String tmp_ext = "";
-		String tmp = "";
-		String extension = "mp3";
 
+		if(cursor.getCount()!=0){
 		cursor.moveToFirst();
 		do {
-			tmp = cursor
-					.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-			tmp_ext = tmp.substring(tmp.length() - 3);
-			tmp = tmp.substring(0, tmp.length() - 4);
-			if (tmp_ext.compareTo(extension) == 0
-					&& !cursor
-							.getString(
-									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-							.contains("Ringtone")) {
-
-				OfflineSong song = new OfflineSong();
-
-				song.setArtist(artist);
-				song.setPath(cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
-				tmp = cursor.getString(cursor
-						.getColumnIndex(MediaStore.MediaColumns.TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor.getString(cursor
-							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor
-							.getString(cursor
-									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.setTitle(tmp);
-				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
-				Songs.add(song);
-			}
+			OfflineSong song = new OfflineSong();
+			song.setPath(cursor.getString(0));
+			song.setArtist(cursor.getString(1));
+			song.setAlbum(cursor.getString(2));
+			song.setTitle(cursor.getString(3));
+			
+			Songs.add(song);
+			
 		} while (cursor.moveToNext());
+}
 		Collections.sort(Songs, new TitleComparator());
+		CreateList.getInstance().setSongList(Songs);
 		ListView lst = (ListView) findViewById(R.id.artist_detail_lstView);
 		CustomSongListAdapter adapter = new CustomSongListAdapter(this, Songs);
 		lst.setAdapter(adapter);
@@ -116,7 +101,6 @@ public class ArtistDetail extends Activity {
 				intentPlay.putExtra("id", audioID);
 				intentPlay.putExtra("artist", artist);
 				intentPlay.putExtra("path", path);
-				intentPlay.putExtra("flag", 2);
 				startActivity(intentPlay);
 
 			}

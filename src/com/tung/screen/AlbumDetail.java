@@ -24,6 +24,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
 import com.tung.object.BitmapProcess;
+import com.tung.object.CreateList;
 
 public class AlbumDetail extends Activity {
 
@@ -58,73 +59,57 @@ public class AlbumDetail extends Activity {
 					500));
 		else
 			img.setImageResource(R.drawable.default_artwork);
-
+		String[] projection = { MediaStore.Audio.Media.DATA,
+				MediaStore.Audio.Media.ARTIST, 
+				MediaStore.Audio.Media.ALBUM,
+				MediaStore.Audio.Media.TITLE 
+				};
 		Cursor cursor = this.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
 				MediaStore.Audio.Media.ALBUM + " ='" + album + "'", null,
 				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 		Songs = new ArrayList<OfflineSong>();
-		String tmp_ext = "";
-		String tmp = "";
-		String extension = "mp3";
 
-		cursor.moveToFirst();
-		do {
-			tmp = cursor
-					.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-			tmp_ext = tmp.substring(tmp.length() - 3);
-			tmp = tmp.substring(0, tmp.length() - 4);
-			if (tmp_ext.compareTo(extension) == 0
-					&& !cursor
-							.getString(
-									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-							.contains("Ringtone")) {
-
+		if (cursor.getCount() != 0) {
+			cursor.moveToFirst();
+			do {
 				OfflineSong song = new OfflineSong();
+				song.setPath(cursor.getString(0));
+				song.setArtist(cursor.getString(1));
+				song.setAlbum(cursor.getString(2));
+				song.setTitle(cursor.getString(3));
 
-				song.setAlbum(album);
-				song.setPath(cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
-				tmp = cursor.getString(cursor
-						.getColumnIndex(MediaStore.MediaColumns.TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor.getString(cursor
-							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor
-							.getString(cursor
-									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.setTitle(tmp);
-				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				Songs.add(song);
-			}
-		} while (cursor.moveToNext());
-		Collections.sort(Songs, new TitleComparator());
-		ListView lst = (ListView) findViewById(R.id.album_detail_lstView);
-		CustomSongListAdapter adapter = new CustomSongListAdapter(this, Songs);
-		lst.setAdapter(adapter);
 
-		intentPlay = new Intent(this, PlaySong.class);
-		lst.setOnItemClickListener(new OnItemClickListener() {
+			} while (cursor.moveToNext());
+		}
+			Collections.sort(Songs, new TitleComparator());
+			CreateList.getInstance().setSongList(Songs);
+			ListView lst = (ListView) findViewById(R.id.album_detail_lstView);
+			CustomSongListAdapter adapter = new CustomSongListAdapter(this,
+					Songs);
+			lst.setAdapter(adapter);
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				// TODO Auto-generated method stub
-				String path = Songs.get(arg2).getPath();
-				String album = Songs.get(arg2).getAlbum();
-				int audioID = arg2;
-				intentPlay.putExtra("id", audioID);
-				intentPlay.putExtra("album", album);
-				intentPlay.putExtra("path", path);
-				intentPlay.putExtra("flag", 3);
-				startActivity(intentPlay);
+			intentPlay = new Intent(this, PlaySong.class);
+			lst.setOnItemClickListener(new OnItemClickListener() {
 
-			}
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
+					// TODO Auto-generated method stub
+					String path = Songs.get(arg2).getPath();
+					String album = Songs.get(arg2).getAlbum();
+					int audioID = arg2;
+					intentPlay.putExtra("id", audioID);
+					intentPlay.putExtra("album", album);
+					intentPlay.putExtra("path", path);
+					//intentPlay.putExtra("flag", 1);
+					startActivity(intentPlay);
 
-		});
+				}
+
+			});
+		
 	}
 
 	@Override

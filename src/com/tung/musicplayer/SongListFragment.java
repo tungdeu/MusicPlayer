@@ -4,7 +4,6 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 import CustomAdapter.CustomSongListAdapter;
@@ -29,7 +28,6 @@ import com.tung.Entities.OfflineSong;
 import com.tung.object.CreateList;
 import com.tung.object.LoadImage;
 import com.tung.screen.PlaySong;
-import com.tung.screen.PlaySongS;
 
 public class SongListFragment extends Fragment {
 
@@ -44,48 +42,31 @@ public class SongListFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.simple_list, container, false);
 
+		String[] projection = { MediaStore.Audio.Media.DATA,
+				MediaStore.Audio.Media.ARTIST, 
+				MediaStore.Audio.Media.ALBUM,
+				MediaStore.Audio.Media.TITLE 
+				};
 		Cursor cursor = getActivity().getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, 
+				MediaStore.Audio.Media.IS_MUSIC +" != 0 ", null,
 				"LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
 		Songs = new ArrayList<OfflineSong>();
-		String tmp_ext = "";
-		String tmp = "";
-		String extension = "mp3";
 
-		cursor.moveToFirst();
-		do {
-			tmp = cursor
-					.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-			tmp_ext = tmp.substring(tmp.length() - 3);
-			tmp = tmp.substring(0, tmp.length() - 4);
-			if (tmp_ext.compareTo(extension) == 0
-					&& !cursor
-							.getString(
-									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-							.contains("Ringtone")) {
-
+		if (cursor.getCount() != 0) {
+			cursor.moveToFirst();
+			do {
 				OfflineSong song = new OfflineSong();
-
-				song.setPath(cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
-				tmp = cursor.getString(cursor
-						.getColumnIndex(MediaStore.MediaColumns.TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor.getString(cursor
-							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor
-							.getString(cursor
-									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.setTitle(tmp);
+				song.setPath(cursor.getString(0));
+				song.setArtist(cursor.getString(1));
+				song.setAlbum(cursor.getString(2));
+				song.setTitle(cursor.getString(3));
 
 				Songs.add(song);
 
-			}
+			} while (cursor.moveToNext());
+		}
 
-		} while (cursor.moveToNext());
 		Collections.sort(Songs, new TitleComparator());
 		CreateList.getInstance().setSongList(Songs);
 		lst = (ListView) view.findViewById(R.id.listView1);
@@ -104,7 +85,7 @@ public class SongListFragment extends Fragment {
 				int audioId = arg2;
 				intentPlay.putExtra("id", audioId);
 				intentPlay.putExtra("path", path);
-				intentPlay.putExtra("flag", 1);
+				//intentPlay.putExtra("flag", 1);
 				startActivity(intentPlay);
 
 			}

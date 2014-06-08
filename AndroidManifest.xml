@@ -53,7 +53,7 @@
         <activity 
             android:name="com.tung.screen.MusicChart" 
             android:label="@layout/chart_layout" 
-            android:permission="android.permission.INTERNET">
+        >
             
         </activity>
                 <activity
@@ -62,5 +62,6 @@
         </activity>
         
     </application>
-
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 </manifest>

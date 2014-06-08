@@ -20,12 +20,14 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
-import com.tung.screen.AlbumDetail.TitleComparator;
+import com.tung.object.CreateList;
 
 public class PlayListDetail extends Activity {
 	public ArrayList<OfflineSong> Songs;
 	public Intent intentPlay;
 	public long playListId;
+	public String playListName;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -34,55 +36,45 @@ public class PlayListDetail extends Activity {
 
 		Intent intent = getIntent();
 		playListId = intent.getLongExtra("id", -1);
+		playListName = intent.getStringExtra("name");
+		setTitle(" " + playListName);
 
-		Cursor cursor = this.getContentResolver().query(
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
-				MediaStore.Audio.Playlists._ID + " ='" + playListId + "'",
-				null, "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+		Cursor cursor = null;
+		String[] projection = {
+				MediaStore.Audio.Playlists.Members.AUDIO_ID,
+				MediaStore.Audio.Playlists.Members.ARTIST,
+				MediaStore.Audio.Playlists.Members.TITLE,
+				MediaStore.Audio.Playlists.Members.DATA };
+		cursor = this.getContentResolver().query(
+				MediaStore.Audio.Playlists.Members.getContentUri("external", playListId), projection,
+				MediaStore.Audio.Media.IS_MUSIC +" != 0 ", null,
+				"LOWER(" + MediaStore.Audio.Playlists.Members.TITLE + ") ASC");
 
 		Songs = new ArrayList<OfflineSong>();
-		String tmp_ext = "";
-		String tmp = "";
-		String extension = "mp3";
-		cursor.moveToFirst();
-		do {
-			tmp = cursor
-					.getString(cursor
-							.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
-			tmp_ext = tmp.substring(tmp.length() - 3);
-			tmp = tmp.substring(0, tmp.length() - 4);
-			if (tmp_ext.compareTo(extension) == 0
-					&& !cursor
-							.getString(
-									cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-							.contains("Ringtone")) {
+
+		if (cursor.getCount() != 0) {
+			cursor.moveToFirst();
+			do {
 
 				OfflineSong song = new OfflineSong();
+				song.setAudioId(cursor.getLong(0));
+				song.setTitle(cursor.getString(2));
+				song.setArtist(cursor.getString(1));
+				song.setPath(cursor.getString(3));
 
-				song.setPath(cursor.getString(cursor
-						.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-
-				tmp = cursor.getString(cursor
-						.getColumnIndex(MediaStore.MediaColumns.TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor.getString(cursor
-							.getColumnIndex(MediaStore.EXTRA_MEDIA_TITLE));
-				if (tmp.isEmpty())
-					tmp = cursor
-							.getString(cursor
-									.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME));
-				song.setTitle(tmp);
-				song.setAudioId(cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID)));
 				Songs.add(song);
-			}
-		} while (cursor.moveToNext());
+
+			} while (cursor.moveToNext());
+			
+		}
 		Collections.sort(Songs, new TitleComparator());
+		CreateList.getInstance().setSongList(Songs);
 		ListView lst = (ListView) findViewById(R.id.listView1);
 		CustomSongListAdapter adapter = new CustomSongListAdapter(this, Songs);
 		lst.setAdapter(adapter);
 
-		intentPlay = new Intent(this,PlaySong.class);
-		
+		intentPlay = new Intent(this, PlaySong.class);
+
 		lst.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -93,9 +85,8 @@ public class PlayListDetail extends Activity {
 				long id = playListId;
 				int audioID = arg2;
 				intentPlay.putExtra("id", audioID);
-				intentPlay.putExtra("playlistId",id);
+				intentPlay.putExtra("playlistId", id);
 				intentPlay.putExtra("path", path);
-				intentPlay.putExtra("flag", 4);
 				startActivity(intentPlay);
 
 			}
