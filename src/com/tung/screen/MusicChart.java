@@ -31,7 +31,7 @@ public class MusicChart extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chart_layout);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrCate);
-		
+        lst = (ListView)findViewById(R.id.chart_layout_lstView);
 		Thread networkThread = new Thread() {
 	        public void run() {
 	            try {
@@ -52,7 +52,7 @@ public class MusicChart extends Activity{
 	               }
 	               runOnUiThread (new Runnable(){ 
 	                   public void run() {
-	                	   		lst = (ListView)findViewById(R.id.chart_layout_lstView);
+	                	   		
 	                	   		lst.setAdapter(adapter);
 	                	   		adapter.notifyDataSetChanged();
 	                         }

@@ -6,8 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +21,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
@@ -82,22 +86,32 @@ public class CustomSongListAdapter extends BaseAdapter implements Filterable {
 
 				@Override
 				public void onClick(View v) {
-					if (viewHolder.toolbar.getVisibility() == View.GONE)
-						viewHolder.toolbar.setVisibility(View.VISIBLE);
-					else
-						viewHolder.toolbar.setVisibility(View.GONE);
-					// CustomAnimation expandAni = new
-					// CustomAnimation(viewHolder.toolbar, 500);
-					// viewHolder.toolbar.startAnimation(expandAni);
+					long playlistID = 149959;
+					int pos = (Integer) v.getTag();
+					long audioID = Song.get(pos).getAudioId();
+					String playlistUri = "content://media/external/audio/playlists/" + playlistID + "/members";
+			        Uri urr = Uri.parse(playlistUri);
+			        ContentValues cv = new ContentValues(3);
+			        
+			        cv.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
+			        cv.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
+			        cv.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
+			        cv.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
+			        
+			        context.getContentResolver().insert(urr, cv);
+			        Toast.makeText(context, "Complete", Toast.LENGTH_LONG).show();
+			        
 				}
 			});
+			
 			convertView.setTag(viewHolder);
+			
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		// viewHolder.position = position;
 		song = Song.get(position);
-
+		viewHolder.spinner.setTag(position);
 		viewHolder.tview.setText(song.getTitle());
 		return convertView;
 

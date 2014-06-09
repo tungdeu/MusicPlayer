@@ -6,6 +6,8 @@ import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
+import com.tung.object.BitmapProcess;
 import com.tung.object.CreateList;
 import com.tung.object.PlayBackService;
 import com.tung.object.Ultilities;
@@ -50,6 +53,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 	private boolean musicBound = false;
 	private Intent pIntent;
 	private int songPos;
+	private MediaPlayer mp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +74,13 @@ public class PlaySong extends Activity implements OnCompletionListener,
 		album = intentPlay.getStringExtra("album");
 		artist = intentPlay.getStringExtra("artist");
 		playListId = intentPlay.getLongExtra("playlistId", 1);
-		songPos = intentPlay.getIntExtra("id", 2);
+		//mp = CreateList.getInstance().getMediaPlayer();
+		//mp.setOnCompletionListener(this);
+		// songPos = intentPlay.getIntExtra("id", 2);
 		ulti = new Ultilities();
-
+		
 		songsList = CreateList.getInstance().getSongList();
-
-		skbarSongProgress.setOnSeekBarChangeListener(this); // Important
-		CreateList.getInstance().getMediaPlayer().setOnCompletionListener(this); // Important
-
-		// By default play first song
-		playSong(songPos);
-
+		reUseView();
 		/**
 		 * Play button click event plays a song and changes button to pause
 		 * image pauses a song and changes button to play image
@@ -123,12 +123,16 @@ public class PlaySong extends Activity implements OnCompletionListener,
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (songPos < (songsList.size() - 1)) {
-					playSong(songPos + 1);
 					songPos = songPos + 1;
+					CreateList.getInstance().playSong(songPos);
+					
+					reUseView();
 				} else {
 					// play first song
-					playSong(0);
 					songPos = 0;
+					CreateList.getInstance().playSong(songPos);
+					
+					reUseView();
 				}
 
 			}
@@ -142,12 +146,16 @@ public class PlaySong extends Activity implements OnCompletionListener,
 			@Override
 			public void onClick(View arg0) {
 				if (songPos > 0) {
-					playSong(songPos - 1);
 					songPos = songPos - 1;
+					CreateList.getInstance().playSong(songPos);
+					
+					reUseView();
 				} else {
 					// play last song
-					playSong(songsList.size() - 1);
 					songPos = songsList.size() - 1;
+					CreateList.getInstance().playSong(songsList.size());
+					
+					reUseView();
 				}
 
 			}
@@ -228,7 +236,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 		if (resultCode == 100) {
 			currentSongIndex = data.getExtras().getInt("songIndex");
 			// play selected song
-			playSong(currentSongIndex);
+			CreateList.getInstance().playSong(currentSongIndex);
 		}
 
 	}
@@ -239,40 +247,42 @@ public class PlaySong extends Activity implements OnCompletionListener,
 	 * @param songIndex
 	 *            - index of song
 	 * */
-	public void playSong(int songIndex) {
-		// Play song
-		try {
-			CreateList.getInstance().getMediaPlayer().reset();
-			CreateList.getInstance().getMediaPlayer()
-					.setDataSource(songsList.get(songIndex).getPath());
-			CreateList.getInstance().getMediaPlayer().prepare();
-			CreateList.getInstance().getMediaPlayer().start();
-			// Displaying Song title
-			String songTitle = songsList.get(songIndex).getTitle();
-			// songTitleLabel.setText(songTitle);
-
-			// Changing Button Image to pause image
-			// btnPlay.setImageResource(R.drawable.btn_pause);
-
-			// set Progress bar values
-			skbarSongProgress.setProgress(0);
-			skbarSongProgress.setMax(100);
-
-			// Updating progress bar
-			updateProgressBar();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void playSong(int songIndex) {
+//		// Play song
+//		try {
+//			CreateList.getInstance().getMediaPlayer().reset();
+//			CreateList.getInstance().getMediaPlayer()
+//					.setDataSource(songsList.get(songIndex).getPath());
+//			CreateList.getInstance().getMediaPlayer().prepare();
+//			CreateList.getInstance().getMediaPlayer().start();
+//			// Displaying Song title
+//			String songTitle = songsList.get(songIndex).getTitle();
+//			// songTitleLabel.setText(songTitle);
+//
+//			// Changing Button Image to pause image
+//			// btnPlay.setImageResource(R.drawable.btn_pause);
+//
+//			// set Progress bar values
+//			skbarSongProgress.setProgress(0);
+//			skbarSongProgress.setMax(100);
+//
+//			// Updating progress bar
+//			updateProgressBar();
+//		} catch (IllegalArgumentException e) {
+//			e.printStackTrace();
+//		} catch (IllegalStateException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Update timer on seekbar
 	 * */
 	public void updateProgressBar() {
+		if(CreateList.getInstance().isWaiter())
+			reUseView();
 		mHandler.postDelayed(mUpdateTimeTask, 1000);
 	}
 
@@ -345,29 +355,29 @@ public class PlaySong extends Activity implements OnCompletionListener,
 	 * is ON play random song
 	 * */
 	@Override
-    public void onCompletion(MediaPlayer arg0) {
- 
-        // check for repeat is ON or OFF
-        if(isRepeat){
-            // repeat is on play same song again
-            playSong(currentSongIndex);
-        } else if(isShuffle){
-            // shuffle is on - play a random song
-            Random rand = new Random();
-            currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
-            playSong(currentSongIndex);
-        } else if(currentSongIndex < (songsList.size() - 1)){
-            // no repeat or shuffle ON - play next song
-            
-                playSong(currentSongIndex + 1);
-                currentSongIndex = currentSongIndex + 1;
-            }else{
-                // play first song
-                playSong(0);
-                currentSongIndex = 0;
-            }
-        }
-    
+	public void onCompletion(MediaPlayer arg0) {
+
+		// check for repeat is ON or OFF
+		if (isRepeat) {
+			// repeat is on play same song again
+			CreateList.getInstance().playSong(currentSongIndex);
+		} else if (isShuffle) {
+			// shuffle is on - play a random song
+			Random rand = new Random();
+			currentSongIndex = rand.nextInt((songsList.size() - 1) - 0 + 1) + 0;
+			CreateList.getInstance().playSong(currentSongIndex);
+		} else if (currentSongIndex < (songsList.size() - 1)) {
+			// no repeat or shuffle ON - play next song
+
+			CreateList.getInstance().playSong(currentSongIndex + 1);
+			currentSongIndex = currentSongIndex + 1;
+		} else {
+			// play first song
+			CreateList.getInstance().playSong(0);
+			currentSongIndex = 0;
+		}
+		reUseView();
+	}
 
 	@Override
 	public void onDestroy() {
@@ -375,6 +385,32 @@ public class PlaySong extends Activity implements OnCompletionListener,
 		mHandler.removeCallbacks(mUpdateTimeTask);
 		// CreateList.getInstance().getMediaPlayer().release();
 		finish();
+	}
+	void reUseView(){
+		CreateList.getInstance().setWaiter(false);
+		songPos = CreateList.getInstance().getCurrentPos();
+		MediaMetadataRetriever metaRetriver = new MediaMetadataRetriever();
+		metaRetriver.setDataSource(songsList.get(songPos).getPath());
+		try {
+			byte[] imageData = metaRetriver.getEmbeddedPicture();
+			Bitmap bitmap = BitmapProcess.decodeSampledBitmap(imageData, 100,
+					100);
+			imgCover.setImageBitmap(bitmap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		;
+		skbarSongProgress.setOnSeekBarChangeListener(this); // Important
+		CreateList.getInstance().getMediaPlayer().setOnCompletionListener(this); // Important
+
+		// By default play first song
+		// set Progress bar values
+		skbarSongProgress.setProgress(0);
+		skbarSongProgress.setMax(100);
+
+		// Updating progress bar
+		updateProgressBar();
+
 	}
 
 }

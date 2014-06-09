@@ -59,7 +59,8 @@ public class ArtistDetail extends Activity {
 		String[] projection = { MediaStore.Audio.Media.DATA,
 				MediaStore.Audio.Media.ARTIST, 
 				MediaStore.Audio.Media.ALBUM,
-				MediaStore.Audio.Media.TITLE 
+				MediaStore.Audio.Media.TITLE,
+				MediaStore.Audio.Media._ID
 				};
 		
 		Cursor cursor = this.getContentResolver().query(
@@ -76,6 +77,7 @@ public class ArtistDetail extends Activity {
 			song.setArtist(cursor.getString(1));
 			song.setAlbum(cursor.getString(2));
 			song.setTitle(cursor.getString(3));
+			song.setAudioId(cursor.getLong(4));
 			
 			Songs.add(song);
 			

@@ -10,5 +10,8 @@
     <string name="title_activity_artist_detail">ArtistDetail</string>
     <string name="title_activity_album_detail">AlbumDetail</string>
     <string name="title_activity_play_song">PlaySong</string>
+    <string name="title_activity_music_chart">Music Chart</string>
+    <string name="title_activity_playlist_detail">Playlist Detail</string>
+    
 
 </resources>

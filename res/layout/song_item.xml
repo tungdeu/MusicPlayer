@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
-        android:layout_toLeftOf="@+id/play_song_imgView"
+        android:layout_toLeftOf="@+id/btn_spinner"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="Bài hát"

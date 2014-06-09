@@ -28,7 +28,7 @@ private Intent intentChart;
 		
 //		intentSearch = new Intent(getActivity(), OnlineSearch.class);
 //		intentDownload = new Intent(getActivity(), Download.class);
-		intentChart = new Intent(getActivity(), MusicChart.class);
+		
 		txtSearch.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -52,6 +52,7 @@ private Intent intentChart;
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				intentChart = new Intent(getActivity(), MusicChart.class);
 				startActivity(intentChart);
 			}
 		});

@@ -1,5 +1,6 @@
 package com.tung.musicplayer;
 
+import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +8,10 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import CustomAdapter.CustomSongListAdapter;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -20,9 +23,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.object.CreateList;
@@ -45,7 +50,8 @@ public class SongListFragment extends Fragment {
 		String[] projection = { MediaStore.Audio.Media.DATA,
 				MediaStore.Audio.Media.ARTIST, 
 				MediaStore.Audio.Media.ALBUM,
-				MediaStore.Audio.Media.TITLE 
+				MediaStore.Audio.Media.TITLE,
+				MediaStore.Audio.Media._ID
 				};
 		Cursor cursor = getActivity().getContentResolver().query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, 
@@ -61,7 +67,7 @@ public class SongListFragment extends Fragment {
 				song.setArtist(cursor.getString(1));
 				song.setAlbum(cursor.getString(2));
 				song.setTitle(cursor.getString(3));
-
+				song.setAudioId(cursor.getLong(4));
 				Songs.add(song);
 
 			} while (cursor.moveToNext());
@@ -83,15 +89,40 @@ public class SongListFragment extends Fragment {
 				// TODO Auto-generated method stub
 				String path = Songs.get(arg2).getPath();
 				int audioId = arg2;
+				CreateList.getInstance().setCurrentPos(audioId);
 				intentPlay.putExtra("id", audioId);
 				intentPlay.putExtra("path", path);
 				//intentPlay.putExtra("flag", 1);
 				startActivity(intentPlay);
-
+				CreateList.getInstance().playSong(audioId);
+				
 			}
 
 		});
 
+//		lst.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//				int playlistID = 149959;
+//				long audioID = Songs.get(position).getAudioId();
+//				String playlistUri = "content://media/external/audio/playlists/" + playlistID + "/members";
+//		        Uri urr = Uri.parse(playlistUri);
+//		        ContentValues cv = new ContentValues(3);
+//		        
+//		        cv.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
+//		        cv.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
+//		        cv.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
+//		        cv.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
+//		        
+//		        getActivity().getContentResolver().insert(urr, cv);
+//		        Toast.makeText(getActivity(), "Complete", Toast.LENGTH_LONG).show();
+//				return false;
+//			}
+//		});
+		
 		txtSearch = (EditText) view.findViewById(R.id.simple_list_searchBox);
 		txtSearch.addTextChangedListener(new TextWatcher() {
 
@@ -146,5 +177,30 @@ public class SongListFragment extends Fragment {
 			return vietnamCollator.compare(o1.getTitle(), o2.getTitle());
 		}
 	}
+//	public void playSong(int songIndex) {
+//		// Play song
+//		try {
+//			CreateList.getInstance().getMediaPlayer().reset();
+//			CreateList.getInstance().getMediaPlayer()
+//					.setDataSource(CreateList.getInstance().getSongList().get(songIndex).getPath());
+//			CreateList.getInstance().getMediaPlayer().prepare();
+//			CreateList.getInstance().getMediaPlayer().start();
+//			// Displaying Song title
+//			String songTitle = CreateList.getInstance().getSongList().get(songIndex).getTitle();
+//			// songTitleLabel.setText(songTitle);
+//
+//			// Changing Button Image to pause image
+//			// btnPlay.setImageResource(R.drawable.btn_pause);
+//
+//			// set Progress bar values
+//
+//		} catch (IllegalArgumentException e) {
+//			e.printStackTrace();
+//		} catch (IllegalStateException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }

@@ -16,11 +16,6 @@
         <activity
             android:name="com.tung.screen.WelcomeScreen"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.tung.screen.Home"
@@ -29,6 +24,11 @@
         <activity
             android:name="com.tung.screen.SongList"
             android:label="@string/title_activity_song_list" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.tung.musicplayer.MainActivity"
@@ -48,20 +48,20 @@
         </activity>
         <activity
             android:name="com.tung.screen.PlayListDetail"
-            android:label="@layout/playlist_detail" >
+            android:label="@string/title_activity_playlist_detail" >
         </activity>
-        <activity 
-            android:name="com.tung.screen.MusicChart" 
-            android:label="@layout/chart_layout" 
-        >
-            
+        <activity
+            android:name="com.tung.screen.MusicChart"
+            android:label="@string/title_activity_music_chart" >
         </activity>
-                <activity
+        <activity
             android:name="com.tung.screen.PlaySongS"
             android:label="@string/title_activity_play_song" >
         </activity>
-        
     </application>
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
+import CustomAdapter.CustomListSongListAdapter;
 import CustomAdapter.CustomSongListAdapter;
 import android.app.Activity;
 import android.content.Intent;
@@ -27,6 +28,7 @@ public class PlayListDetail extends Activity {
 	public Intent intentPlay;
 	public long playListId;
 	public String playListName;
+	public boolean isEdit = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class PlayListDetail extends Activity {
 		Intent intent = getIntent();
 		playListId = intent.getLongExtra("id", -1);
 		playListName = intent.getStringExtra("name");
-		setTitle(" " + playListName);
+		setTitle(" " + playListId);
 
 		Cursor cursor = null;
 		String[] projection = {
@@ -48,7 +50,7 @@ public class PlayListDetail extends Activity {
 		cursor = this.getContentResolver().query(
 				MediaStore.Audio.Playlists.Members.getContentUri("external", playListId), projection,
 				MediaStore.Audio.Media.IS_MUSIC +" != 0 ", null,
-				"LOWER(" + MediaStore.Audio.Playlists.Members.TITLE + ") ASC");
+				null);
 
 		Songs = new ArrayList<OfflineSong>();
 
@@ -67,10 +69,10 @@ public class PlayListDetail extends Activity {
 			} while (cursor.moveToNext());
 			
 		}
-		Collections.sort(Songs, new TitleComparator());
+		
 		CreateList.getInstance().setSongList(Songs);
 		ListView lst = (ListView) findViewById(R.id.listView1);
-		CustomSongListAdapter adapter = new CustomSongListAdapter(this, Songs);
+		CustomListSongListAdapter adapter = new CustomListSongListAdapter(this, Songs,isEdit);
 		lst.setAdapter(adapter);
 
 		intentPlay = new Intent(this, PlaySong.class);
