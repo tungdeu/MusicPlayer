@@ -1,6 +1,5 @@
 package com.tung.musicplayer;
 
-import java.io.IOException;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +39,6 @@ public class SongListFragment extends Fragment {
 	Intent intentPlay;
 	CustomSongListAdapter adapter;
 	ListView lst;
-	EditText txtSearch;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,71 +98,6 @@ public class SongListFragment extends Fragment {
 
 		});
 
-//		lst.setOnItemLongClickListener(new OnItemLongClickListener() {
-//
-//			@Override
-//			public boolean onItemLongClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				// TODO Auto-generated method stub
-//				int playlistID = 149959;
-//				long audioID = Songs.get(position).getAudioId();
-//				String playlistUri = "content://media/external/audio/playlists/" + playlistID + "/members";
-//		        Uri urr = Uri.parse(playlistUri);
-//		        ContentValues cv = new ContentValues(3);
-//		        
-//		        cv.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
-//		        cv.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
-//		        cv.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
-//		        cv.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
-//		        
-//		        getActivity().getContentResolver().insert(urr, cv);
-//		        Toast.makeText(getActivity(), "Complete", Toast.LENGTH_LONG).show();
-//				return false;
-//			}
-//		});
-		
-		txtSearch = (EditText) view.findViewById(R.id.simple_list_searchBox);
-		txtSearch.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				// TODO Auto-generated method stub
-				if (s.length() != 0) {
-					adapter.setSource(Songs);
-					adapter.getFilter().filter(s);
-					LoadImage loadImage = new LoadImage(adapter);
-					loadImage.execute(lst.getFirstVisiblePosition());
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-
-			}
-		});
-
-		ImageButton btnClear = (ImageButton) view
-				.findViewById(R.id.simple_list_btnclear);
-		btnClear.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				txtSearch.setText("");
-				adapter.setSource(Songs);
-				adapter.notifyDataSetChanged();
-
-			}
-		});
 		return view;
 
 	}
@@ -177,30 +110,6 @@ public class SongListFragment extends Fragment {
 			return vietnamCollator.compare(o1.getTitle(), o2.getTitle());
 		}
 	}
-//	public void playSong(int songIndex) {
-//		// Play song
-//		try {
-//			CreateList.getInstance().getMediaPlayer().reset();
-//			CreateList.getInstance().getMediaPlayer()
-//					.setDataSource(CreateList.getInstance().getSongList().get(songIndex).getPath());
-//			CreateList.getInstance().getMediaPlayer().prepare();
-//			CreateList.getInstance().getMediaPlayer().start();
-//			// Displaying Song title
-//			String songTitle = CreateList.getInstance().getSongList().get(songIndex).getTitle();
-//			// songTitleLabel.setText(songTitle);
-//
-//			// Changing Button Image to pause image
-//			// btnPlay.setImageResource(R.drawable.btn_pause);
-//
-//			// set Progress bar values
-//
-//		} catch (IllegalArgumentException e) {
-//			e.printStackTrace();
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+
 
 }

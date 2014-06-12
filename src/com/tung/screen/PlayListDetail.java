@@ -2,12 +2,10 @@ package com.tung.screen;
 
 import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
 import CustomAdapter.CustomListSongListAdapter;
-import CustomAdapter.CustomSongListAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,9 +13,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.tung.Entities.OfflineSong;
 import com.tung.musicplayer.R;
@@ -28,14 +28,16 @@ public class PlayListDetail extends Activity {
 	public Intent intentPlay;
 	public long playListId;
 	public String playListName;
-	public boolean isEdit = true;
+	public boolean isEdit = false;
+	private TextView btn_edit;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.playlist_detail);
-
+		btn_edit = (TextView)findViewById(R.id.playlist_detail_btnEdit);
 		Intent intent = getIntent();
 		playListId = intent.getLongExtra("id", -1);
 		playListName = intent.getStringExtra("name");
@@ -71,8 +73,8 @@ public class PlayListDetail extends Activity {
 		}
 		
 		CreateList.getInstance().setSongList(Songs);
-		ListView lst = (ListView) findViewById(R.id.listView1);
-		CustomListSongListAdapter adapter = new CustomListSongListAdapter(this, Songs,isEdit);
+		final ListView lst = (ListView) findViewById(R.id.listView1);
+		final CustomListSongListAdapter adapter = new CustomListSongListAdapter(this, Songs,isEdit,playListId);
 		lst.setAdapter(adapter);
 
 		intentPlay = new Intent(this, PlaySong.class);
@@ -90,10 +92,32 @@ public class PlayListDetail extends Activity {
 				intentPlay.putExtra("playlistId", id);
 				intentPlay.putExtra("path", path);
 				startActivity(intentPlay);
+				CreateList.getInstance().playSong(audioID);
 
 			}
 
 		});
+		
+		btn_edit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (isEdit){
+					isEdit=false;
+					btn_edit.setText("OK");
+					CustomListSongListAdapter adapter = new CustomListSongListAdapter(getApplicationContext(), Songs,isEdit,playListId);
+					lst.setAdapter(adapter);
+					}
+				else {
+					isEdit=true;
+					btn_edit.setText("Edit");
+					CustomListSongListAdapter adapter = new CustomListSongListAdapter(getApplicationContext(), Songs,isEdit,playListId);
+					lst.setAdapter(adapter);
+				}
+			}
+		});
+		
 	}
 
 	@Override

@@ -16,7 +16,6 @@
         android:id="@+id/playlist_layout_txtView"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
@@ -34,5 +33,29 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp" >
     </ListView>
+
+    <ImageView
+        android:id="@+id/playlist_layout_imgDelele"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_alignBottom="@+id/playlist_layout_txtView"
+        android:layout_alignTop="@+id/playlist_layout_txtView"
+        android:layout_toRightOf="@+id/playlist_layout_txtView"
+        android:src="@android:drawable/ic_delete" />
+
+    <TextView
+        android:id="@+id/playlist_layout_txtDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_above="@+id/playlist_layout_lstView"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/playlist_layout_imgDelele"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:text="Delete"
+        android:textSize="18sp" />
 
 </RelativeLayout>

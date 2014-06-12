@@ -44,7 +44,8 @@
         </activity>
         <activity
             android:name="com.tung.screen.PlaySong"
-            android:label="@string/title_activity_play_song" >
+            android:label="@string/title_activity_play_song"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar" >
         </activity>
         <activity
             android:name="com.tung.screen.PlayListDetail"
@@ -57,6 +58,10 @@
         <activity
             android:name="com.tung.screen.PlaySongS"
             android:label="@string/title_activity_play_song" >
+        </activity>
+        <activity
+            android:name="com.tung.screen.SearchSong"
+            android:label="@string/title_activity_search_song" >
         </activity>
     </application>
 

@@ -4,8 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import CustomAdapter.CustomPlayListAdapter;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -15,18 +22,20 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tung.Entities.PlayListE;
 import com.tung.screen.PlayListDetail;
-import com.tung.screen.PlaySong;
 
 public class PlayListFragment extends Fragment {
 	PlayListFragment fragment;
 	List<PlayListE> Playlist;
 	Intent intent;
 	TextView txtAdd;
+	TextView txtDelete;
+	boolean isEdit = false;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -34,7 +43,7 @@ public class PlayListFragment extends Fragment {
 		 View view = inflater
 				.inflate(R.layout.playlist_layout, container, false);
 		txtAdd = (TextView)view.findViewById(R.id.playlist_layout_txtView);
-
+		txtDelete = (TextView)view.findViewById(R.id.playlist_layout_txtDelete);
 		final String[] projection = { MediaStore.Audio.Playlists._ID,
 				MediaStore.Audio.Playlists.NAME };
 		final Cursor cursor = getActivity().getContentResolver().query(
@@ -60,7 +69,7 @@ public class PlayListFragment extends Fragment {
 		}
 		intent = new Intent(getActivity(),PlayListDetail.class);
 		final ListView lst = (ListView)view.findViewById(R.id.playlist_layout_lstView);
-		final CustomPlayListAdapter adapter = new CustomPlayListAdapter(getActivity(), Playlist);
+		final CustomPlayListAdapter adapter = new CustomPlayListAdapter(getActivity(), Playlist,isEdit);
 		lst.setAdapter(adapter);
 
 		lst.setOnItemClickListener(new OnItemClickListener() {
@@ -78,57 +87,75 @@ public class PlayListFragment extends Fragment {
 			}
 		});
 		
+		txtDelete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (isEdit){
+					isEdit = false;
+					txtDelete.setText("Delete");
+					CustomPlayListAdapter adapter = new CustomPlayListAdapter(getActivity(), Playlist,isEdit);
+					lst.setAdapter(adapter);
+				}
+				else {
+					isEdit = true;
+					txtDelete.setText("OK");
+					CustomPlayListAdapter adapter = new CustomPlayListAdapter(getActivity(), Playlist,isEdit);
+					lst.setAdapter(adapter);
+				}
+			}
+		});
 		txtAdd.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent1 = new Intent(getActivity(),PlaySong.class);
-				startActivity(intent1);
+
 				// TODO Auto-generated method stub
-//				View view1 = getActivity().getLayoutInflater().inflate(
-//						R.layout.dialog_add_playlist, null);
-//				AlertDialog.Builder dialogBuiler = new Builder(getActivity());
-//				dialogBuiler.setTitle("New Playlist");
-//				dialogBuiler.setView(view1);
-//				dialogBuiler.setCancelable(true);
-//				final EditText input_txt = (EditText)view1.findViewById(R.id.dialog_add_playlist_txt);
-//				dialogBuiler.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//					
-//					@Override
-//					public void onClick(DialogInterface dialog, int which) {
-//						// TODO Auto-generated method stub
-//						if(!input_txt.getText().toString().isEmpty()){
-//					        ContentResolver cr = getActivity().getContentResolver();
-//					        
-//					        String playlistUri = "content://media/external/audio/playlists/";
-//					        
-//					        ContentValues cv = new ContentValues(1);
-//
-//							Uri urr = Uri.parse(playlistUri);
-//							////cv.put(MediaStore.Audio.Playlists._ID, 1 + "");
-//							cv.put(MediaStore.Audio.Playlists.NAME, input_txt.getText().toString());
-//							
-//							cr.insert(urr, cv);
-//							PlayListE newplaylist = new PlayListE();
-//							newplaylist.setPlayListName(input_txt.getText().toString());
-//
-//							Playlist.add(newplaylist);
-//							adapter.setSoure(Playlist);
-//							adapter.notifyDataSetChanged();
-////							lst.setAdapter(adapter);
-//							dialog.dismiss();
-//							getActivity().recreate();
-//						}
-//						else dialog.dismiss();
-//					}
-//				
-//				}); 
-//				
-//				dialogBuiler.setNegativeButton("Cancel", null);
-//				
-//				final Dialog dialog = dialogBuiler.create();
-//
-//				dialog.show();
+				View view1 = getActivity().getLayoutInflater().inflate(
+						R.layout.dialog_add_playlist, null);
+				AlertDialog.Builder dialogBuiler = new Builder(getActivity());
+				dialogBuiler.setTitle("New Playlist");
+				dialogBuiler.setView(view1);
+				dialogBuiler.setCancelable(true);
+				final EditText input_txt = (EditText)view1.findViewById(R.id.dialog_add_playlist_txt);
+				dialogBuiler.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						if(!input_txt.getText().toString().isEmpty()){
+					        ContentResolver cr = getActivity().getContentResolver();
+					        
+					        String playlistUri = "content://media/external/audio/playlists/";
+					        
+					        ContentValues cv = new ContentValues(1);
+
+							Uri urr = Uri.parse(playlistUri);
+							////cv.put(MediaStore.Audio.Playlists._ID, 1 + "");
+							cv.put(MediaStore.Audio.Playlists.NAME, input_txt.getText().toString());
+							
+							cr.insert(urr, cv);
+							PlayListE newplaylist = new PlayListE();
+							newplaylist.setPlayListName(input_txt.getText().toString());
+
+							Playlist.add(newplaylist);
+							adapter.setSoure(Playlist);
+							adapter.notifyDataSetChanged();
+//							lst.setAdapter(adapter);
+							dialog.dismiss();
+							getActivity().recreate();
+						}
+						else dialog.dismiss();
+					}
+				
+				}); 
+				
+				dialogBuiler.setNegativeButton("Cancel", null);
+				
+				final Dialog dialog = dialogBuiler.create();
+
+				dialog.show();
 			}
 		});
 		return view;

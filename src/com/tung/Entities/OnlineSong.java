@@ -10,6 +10,15 @@ public class OnlineSong {
 	private String lyric;
 	private Bitmap artwork;
 	private int vote;
+	private String source;
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
 
 	public Bitmap getAlbumArt() {
 		return artwork;

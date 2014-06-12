@@ -23,12 +23,14 @@ public class CustomListSongListAdapter extends BaseAdapter {
 	Context context;
 	boolean isEdit;
 	OfflineSong song;
+	long playlistID;
 	
-	public CustomListSongListAdapter(Context context, List<OfflineSong> song, boolean isEdit) {
+	public CustomListSongListAdapter(Context context, List<OfflineSong> song, boolean isEdit, long playlistID) {
 		super();
 		Song = song;
 		this.context = context;
 		this.isEdit = isEdit;
+		this.playlistID = playlistID;
 
 	}
 	
@@ -76,17 +78,10 @@ public class CustomListSongListAdapter extends BaseAdapter {
 
 				@Override
 				public void onClick(View v) {
-					int playlistID = 149959;
+					long playlistId = playlistID;
 					int pos = (Integer) v.getTag();
 					long audioID = Song.get(pos).getAudioId();
-			        String[] projection = new String[] {"count(*)"};
-			        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistID);
-			        Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
-			        cur.moveToFirst();
-			        final int base = cur.getInt(0);
-			        cur.close();
-			        ContentValues values = new ContentValues();
-
+			        Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
 			        context.getContentResolver().delete(uri, MediaStore.Audio.Playlists.Members.AUDIO_ID +" = "+audioID, null);
 			        Song.remove(pos);
 			        notifyDataSetChanged();

@@ -4,17 +4,26 @@
     android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/song_item_textViewSong"
+        android:id="@+id/playlist_item_textView"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/song_item_btndel"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="Playlist 1"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/playlist_item_btndel"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/song_item_textViewSong"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_delete" 
+        android:visibility="gone"/>
 
 </RelativeLayout>

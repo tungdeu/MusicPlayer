@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
-        android:layout_toLeftOf="@+id/btn_spinner"
+        android:layout_toLeftOf="@+id/playlist_song_item_btn_spinner"
         android:gravity="center_vertical"
         android:maxLines="1"
         android:text="Bài hát"
@@ -18,13 +18,13 @@
 
     <ImageView
         android:id="@+id/playlist_song_item_btn_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_alignBottom="@+id/playlist_song_item_textViewSong"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="5dp"
-        android:src="@android:drawable/ic_menu_more" 
+        android:src="@drawable/ic_delete" 
         android:visibility="gone"/>
 
 </RelativeLayout>

@@ -107,6 +107,7 @@ public class AlbumDetail extends Activity {
 					intentPlay.putExtra("path", path);
 					//intentPlay.putExtra("flag", 1);
 					startActivity(intentPlay);
+					CreateList.getInstance().playSong(audioID);
 
 				}
 

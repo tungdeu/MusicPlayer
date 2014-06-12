@@ -1,19 +1,23 @@
 package com.tung.screen;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ImageButton;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -29,15 +33,18 @@ import com.tung.object.Ultilities;
 public class PlaySong extends Activity implements OnCompletionListener,
 		SeekBar.OnSeekBarChangeListener {
 
-	private ImageButton btnPlay;
-	private ImageButton btnNext;
-	private ImageButton btnPrevious;
-	private ImageButton btnShuffle;
-	private ImageButton btnRepeat;
+	private ImageView btnPlay;
+	private ImageView btnNext;
+	private ImageView btnPrevious;
+	private ImageView btnShuffle;
+	private ImageView btnRepeat;
 	private SeekBar skbarSongProgress;
 	private TextView txtFirst;
 	private TextView txtLast;
 	private ImageView imgCover;
+	private TextView txtTitle;
+	private TextView txtArtist;
+	private ImageView btndownload;
 	Ultilities ulti;
 	private Handler mHandler = new Handler();
 	private int currentSongIndex = 0;
@@ -54,37 +61,33 @@ public class PlaySong extends Activity implements OnCompletionListener,
 	private Intent pIntent;
 	private int songPos;
 	private MediaPlayer mp;
-
+public String Download_path ="http://mp3.zing.vn/xml/load-song/MjAxMSUyRjA2JTJGMTQlMkZhJTJGMSUyRmExYzJmYzFiOThjYjZmMzgxNWUyODM3ZDE2NWI5NzYzLm1wMyU3QzI";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play_song);
-		btnPlay = (ImageButton) findViewById(R.id.media_control_play);
-		btnNext = (ImageButton) findViewById(R.id.media_control_next);
-		btnPrevious = (ImageButton) findViewById(R.id.media_control_previous);
-		btnShuffle = (ImageButton) findViewById(R.id.media_control_shuffle);
-		btnRepeat = (ImageButton) findViewById(R.id.media_control_repeat);
+		btnPlay = (ImageView) findViewById(R.id.media_control_play);
+		btnNext = (ImageView) findViewById(R.id.media_control_next);
+		btnPrevious = (ImageView) findViewById(R.id.media_control_previous);
+		btnShuffle = (ImageView) findViewById(R.id.media_control_shuffle);
+		btnRepeat = (ImageView) findViewById(R.id.media_control_repeat);
 		skbarSongProgress = (SeekBar) findViewById(R.id.media_control_seekbar);
 		txtFirst = (TextView) findViewById(R.id.media_control_txt_first);
 		txtLast = (TextView) findViewById(R.id.media_control_txt_second);
 		imgCover = (ImageView) findViewById(R.id.play_song_imgView);
-
+		txtTitle = (TextView) findViewById(R.id.play_song_title);
+		txtArtist = (TextView)findViewById(R.id.play_song_artist);
+		//btndownload =(ImageView)findViewById(R.id.media_control_download);
 		intentPlay = getIntent();
 		listFlag = intentPlay.getIntExtra("flag", 1);
 		album = intentPlay.getStringExtra("album");
 		artist = intentPlay.getStringExtra("artist");
 		playListId = intentPlay.getLongExtra("playlistId", 1);
-		//mp = CreateList.getInstance().getMediaPlayer();
-		//mp.setOnCompletionListener(this);
-		// songPos = intentPlay.getIntExtra("id", 2);
 		ulti = new Ultilities();
 		
 		songsList = CreateList.getInstance().getSongList();
 		reUseView();
-		/**
-		 * Play button click event plays a song and changes button to pause
-		 * image pauses a song and changes button to play image
-		 * */
+
 		btnPlay.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -94,7 +97,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 					if (CreateList.getInstance().getMediaPlayer() != null) {
 						CreateList.getInstance().getMediaPlayer().pause();
 						// Changing button image to play button
-						// btnPlay.setImageResource(R.drawable.btn_play);
+						btnPlay.setImageResource(R.drawable.play_white);
 					}
 				} else {
 					// Resume song
@@ -102,28 +105,21 @@ public class PlaySong extends Activity implements OnCompletionListener,
 						CreateList.getInstance().getMediaPlayer().start();
 						mHandler.postDelayed(mUpdateTimeTask, 1000);
 						// Changing button image to pause button
-						// btnPlay.setImageResource(R.drawable.btn_pause);
+						btnPlay.setImageResource(R.drawable.pause_white);
 					}
 				}
 
 			}
 		});
 
-		/**
-		 * Forward button click event Forwards song specified seconds
-		 * */
 
-		/**
-		 * Next button click event Plays next song by taking currentSongIndex +
-		 * 1
-		 * */
 		btnNext.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				// check if next song is there or not
 				if (songPos < (songsList.size() - 1)) {
-					songPos = songPos + 1;
+					songPos = songPos + 1;					
 					CreateList.getInstance().playSong(songPos);
 					
 					reUseView();
@@ -172,7 +168,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 					isRepeat = false;
 					Toast.makeText(getApplicationContext(), "Repeat is OFF",
 							Toast.LENGTH_SHORT).show();
-					// btnRepeat.setImageResource(R.drawable.btn_repeat);
+					btnRepeat.setImageResource(R.drawable.repeat_white);
 				} else {
 					// make repeat to true
 					isRepeat = true;
@@ -180,8 +176,8 @@ public class PlaySong extends Activity implements OnCompletionListener,
 							Toast.LENGTH_SHORT).show();
 					// make shuffle to false
 					isShuffle = false;
-					// btnRepeat.setImageResource(R.drawable.btn_repeat_focused);
-					// btnShuffle.setImageResource(R.drawable.btn_shuffle);
+					btnRepeat.setImageResource(R.drawable.repeat_blue);
+					btnShuffle.setImageResource(R.drawable.shuffle_white);
 				}
 			}
 		});
@@ -197,7 +193,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 					isShuffle = false;
 					Toast.makeText(getApplicationContext(), "Shuffle is OFF",
 							Toast.LENGTH_SHORT).show();
-					// btnShuffle.setImageResource(R.drawable.btn_shuffle);
+					btnShuffle.setImageResource(R.drawable.shuffle_white);
 				} else {
 					// make repeat to true
 					isShuffle = true;
@@ -205,7 +201,7 @@ public class PlaySong extends Activity implements OnCompletionListener,
 							Toast.LENGTH_SHORT).show();
 					// make shuffle to false
 					isRepeat = false;
-					// btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
+					btnShuffle.setImageResource(R.drawable.shuffle_blue);
 					// btnRepeat.setImageResource(R.drawable.btn_repeat);
 				}
 			}
@@ -225,6 +221,25 @@ public class PlaySong extends Activity implements OnCompletionListener,
 		// }
 		// });
 
+//		btndownload.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				if(listFlag==9){
+//				SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(PlaySong.this);
+//				DownloadManager dm = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+//				
+//			    Uri Download_Uri = Uri.parse(Download_path);
+//			    DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+//			    request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+//			    request.setAllowedOverRoaming(false);
+//			    request.setTitle(intentPlay.getStringExtra("title"));
+//			    request.setDestinationInExternalFilesDir(PlaySong.this,Environment.DIRECTORY_DOWNLOADS,intentPlay.getStringExtra("title") + ".mp3");
+//			    dm.enqueue(request);
+//				}
+//			}
+//		});
 	}
 
 	/**
@@ -241,54 +256,14 @@ public class PlaySong extends Activity implements OnCompletionListener,
 
 	}
 
-	/**
-	 * Function to play a song
-	 * 
-	 * @param songIndex
-	 *            - index of song
-	 * */
-//	public void playSong(int songIndex) {
-//		// Play song
-//		try {
-//			CreateList.getInstance().getMediaPlayer().reset();
-//			CreateList.getInstance().getMediaPlayer()
-//					.setDataSource(songsList.get(songIndex).getPath());
-//			CreateList.getInstance().getMediaPlayer().prepare();
-//			CreateList.getInstance().getMediaPlayer().start();
-//			// Displaying Song title
-//			String songTitle = songsList.get(songIndex).getTitle();
-//			// songTitleLabel.setText(songTitle);
-//
-//			// Changing Button Image to pause image
-//			// btnPlay.setImageResource(R.drawable.btn_pause);
-//
-//			// set Progress bar values
-//			skbarSongProgress.setProgress(0);
-//			skbarSongProgress.setMax(100);
-//
-//			// Updating progress bar
-//			updateProgressBar();
-//		} catch (IllegalArgumentException e) {
-//			e.printStackTrace();
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
-	/**
-	 * Update timer on seekbar
-	 * */
 	public void updateProgressBar() {
 		if(CreateList.getInstance().isWaiter())
 			reUseView();
 		mHandler.postDelayed(mUpdateTimeTask, 1000);
 	}
 
-	/**
-	 * Background Runnable thread
-	 * */
+
 	private Runnable mUpdateTimeTask = new Runnable() {
 		public void run() {
 			if (CreateList.getInstance().getMediaPlayer().isPlaying()) {
@@ -387,19 +362,33 @@ public class PlaySong extends Activity implements OnCompletionListener,
 		finish();
 	}
 	void reUseView(){
+
 		CreateList.getInstance().setWaiter(false);
 		songPos = CreateList.getInstance().getCurrentPos();
-		MediaMetadataRetriever metaRetriver = new MediaMetadataRetriever();
-		metaRetriver.setDataSource(songsList.get(songPos).getPath());
-		try {
-			byte[] imageData = metaRetriver.getEmbeddedPicture();
-			Bitmap bitmap = BitmapProcess.decodeSampledBitmap(imageData, 100,
-					100);
-			imgCover.setImageBitmap(bitmap);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(listFlag==9){
+			txtTitle.setText(intentPlay.getStringExtra("title"));
+			txtArtist.setText("");
+			imgCover.setImageResource(R.drawable.default_artwork);
 		}
-		;
+		else{
+			txtTitle.setText(songsList.get(songPos).getTitle());
+			txtArtist.setText(songsList.get(songPos).getArtist());
+			MediaMetadataRetriever metaRetriver = new MediaMetadataRetriever();
+			metaRetriver.setDataSource(songsList.get(songPos).getPath());
+			try {
+				byte[] imageData = metaRetriver.getEmbeddedPicture();
+				if(imageData != null){
+				Bitmap bitmap = BitmapProcess.decodeSampledBitmap(imageData, 500,
+						500);
+				imgCover.setImageBitmap(bitmap);}
+				else
+				imgCover.setImageResource(R.drawable.default_artwork);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			;
+		}
+
 		skbarSongProgress.setOnSeekBarChangeListener(this); // Important
 		CreateList.getInstance().getMediaPlayer().setOnCompletionListener(this); // Important
 

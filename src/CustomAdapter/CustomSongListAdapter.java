@@ -6,8 +6,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
+import android.app.DownloadManager.Query;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -15,19 +22,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tung.Entities.OfflineSong;
+import com.tung.Entities.PlayListE;
 import com.tung.musicplayer.R;
 import com.tung.object.LoadImage;
 
-public class CustomSongListAdapter extends BaseAdapter implements Filterable {
+public class CustomSongListAdapter extends BaseAdapter {
 	List<OfflineSong> Song;
 	Context context;
 	OfflineSong song;
@@ -85,22 +96,128 @@ public class CustomSongListAdapter extends BaseAdapter implements Filterable {
 			viewHolder.spinner.setOnClickListener(new OnClickListener() {
 
 				@Override
-				public void onClick(View v) {
-					long playlistID = 149959;
-					int pos = (Integer) v.getTag();
-					long audioID = Song.get(pos).getAudioId();
-					String playlistUri = "content://media/external/audio/playlists/" + playlistID + "/members";
-			        Uri urr = Uri.parse(playlistUri);
-			        ContentValues cv = new ContentValues(3);
-			        
-			        cv.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
-			        cv.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
-			        cv.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
-			        cv.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
-			        
-			        context.getContentResolver().insert(urr, cv);
-			        Toast.makeText(context, "Complete", Toast.LENGTH_LONG).show();
-			        
+				public void onClick(final View v) {
+					View view1 = LayoutInflater.from(context).inflate(R.layout.dialog_add_song_to_list,null);
+					TextView tview= (TextView)view1.findViewById(R.id.dialog_add_song_to_list_txtCreatNew);
+					ListView lstView = (ListView)view1.findViewById(R.id.dialog_add_song_to_list_lst);
+					AlertDialog.Builder dialogBuilder = new Builder(context);
+					dialogBuilder.setTitle("Select Playlist");
+					dialogBuilder.setView(view1);
+					dialogBuilder.setCancelable(true);
+					dialogBuilder.setNegativeButton("Cancel", null);
+					
+					final String[] projection = { MediaStore.Audio.Playlists._ID,
+							MediaStore.Audio.Playlists.NAME };
+					final Cursor cursor = context.getContentResolver().query(
+							MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, projection,
+							null, null, MediaStore.Audio.Playlists.NAME);
+					final ArrayList<PlayListE> Playlist = new ArrayList<PlayListE>();
+					
+					if (cursor.getCount()!=0){
+						cursor.moveToFirst();
+						do {
+							
+							long playListId = cursor.getLong(0);
+							String playListName = cursor.getString(1);
+							
+							PlayListE plist = new PlayListE();
+							plist.setPlayListId(playListId);
+							plist.setPlayListName(playListName);
+							
+							Playlist.add(plist);
+							
+						}while (cursor.moveToNext());
+					}
+					
+					final CustomPlayListAdapter adapter = new CustomPlayListAdapter(context, Playlist);
+					lstView.setAdapter(adapter);
+					final Dialog dialogA = dialogBuilder.create();
+					dialogA.show();
+					tview.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v1) {
+							// TODO Auto-generated method stub
+							View view2 = LayoutInflater.from(context).inflate(R.layout.dialog_add_song_to_list_sub,null);
+							final AlertDialog.Builder dialogBuilder1 = new Builder(context);
+							dialogBuilder1.setTitle("Select Playlist");
+							dialogBuilder1.setView(view2);
+							dialogBuilder1.setCancelable(true);
+							dialogBuilder1.setNegativeButton("Cancel", null);
+							
+							final EditText txt = (EditText)view2.findViewById(R.id.dialog_add_song_to_list_sub_edittext);
+							dialogBuilder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+							
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									// TODO Auto-generated method stub
+									if(!txt.getText().toString().isEmpty()){
+								        ContentResolver cr = context.getContentResolver();
+								        
+								        String playlistUri = "content://media/external/audio/playlists/";
+								        
+								        ContentValues cv = new ContentValues(1);
+			
+										Uri urr = Uri.parse(playlistUri);
+										cv.put(MediaStore.Audio.Playlists.NAME, txt.getText().toString());
+										
+										cr.insert(urr, cv);
+										PlayListE newplaylist = new PlayListE();
+										newplaylist.setPlayListName(txt.getText().toString());
+			
+										Playlist.add(newplaylist);
+										int playlistID = getPlaylistId(txt.getText().toString());
+										
+										
+										int pos = (Integer)v.getTag();
+										long audioID = Song.get(pos).getAudioId();
+										
+										String playlistUri1 = "content://media/external/audio/playlists/" + playlistID + "/members";
+								        Uri urr1 = Uri.parse(playlistUri1);
+								        ContentValues cv1 = new ContentValues(3);
+								        
+								        cv1.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
+								        cv1.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
+								        cv1.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
+								        cv1.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
+								        
+								        context.getContentResolver().insert(urr1, cv1);
+								        dialogA.dismiss();
+									}
+									else dialog.dismiss();
+								}
+
+							});
+							final Dialog dialog1 = dialogBuilder1.create();
+							dialog1.show();
+						}
+					});
+					
+					lstView.setOnItemClickListener(new OnItemClickListener() {
+
+						@Override
+						public void onItemClick(AdapterView<?> arg0, View arg1,
+								int arg2, long arg3) {
+							// TODO Auto-generated method stub
+							long playlistID = Playlist.get(arg2).getPlayListId();
+							int pos = (Integer)v.getTag();
+							long audioID = Song.get(pos).getAudioId();
+							
+							String playlistUri = "content://media/external/audio/playlists/" + playlistID + "/members";
+					        Uri urr = Uri.parse(playlistUri);
+					        ContentValues cv = new ContentValues(3);
+					        
+					        cv.put(MediaStore.Audio.Playlists.Members.PLAYLIST_ID, playlistID + "");
+					        cv.put(MediaStore.Audio.Playlists.Members.AUDIO_ID, audioID + "");
+					        cv.put(MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER, "0");
+					        cv.put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, "0");
+					        
+					        context.getContentResolver().insert(urr, cv);
+					        dialogA.dismiss();
+						}
+					});
+					
+
 				}
 			});
 			
@@ -109,7 +226,7 @@ public class CustomSongListAdapter extends BaseAdapter implements Filterable {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		// viewHolder.position = position;
+		
 		song = Song.get(position);
 		viewHolder.spinner.setTag(position);
 		viewHolder.tview.setText(song.getTitle());
@@ -117,60 +234,6 @@ public class CustomSongListAdapter extends BaseAdapter implements Filterable {
 
 	}
 
-	@Override
-	public Filter getFilter() {
-		// TODO Auto-generated method stub
-		return new CustomFilter();
-	}
-
-	public class CustomFilter extends Filter {
-
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
-			FilterResults filterResults = new FilterResults();
-			List<OfflineSong> tempList = new ArrayList<OfflineSong>();
-			// constraint is the result from text you want to filter against.
-			// objects is your data set you will filter from
-			if (constraint != null && constraint.length() != 0) {
-				int length = Song.size();
-				int i = 0;
-				Locale locale = new Locale("vi_VN");
-				constraint = constraint.toString().toLowerCase(locale);
-				while (i < length) {
-					OfflineSong item = Song.get(i);
-					if ((item.getTitle().toLowerCase(locale))
-							.contains(constraint))
-						tempList.add(item);
-					i++;
-				}
-				// following two lines is very important
-				// as publish result can only take FilterResults objects
-				filterResults.values = tempList;
-				filterResults.count = tempList.size();
-			}
-			// else
-			// {
-			// filterResults.values = OriginalSongs;
-			// filterResults.count = OriginalSongs.size();
-			// }
-			return filterResults;
-		}
-
-		@Override
-		protected void publishResults(CharSequence constraint,
-				FilterResults results) {
-			// TODO Auto-generated method stub
-			setSource((List<OfflineSong>) results.values);
-			if (Song != null)
-				Collections.sort(Song,
-						new SearchResultComparator(constraint.toString()));
-			if (results.count > 0) {
-				notifyDataSetChanged();
-			} else {
-				notifyDataSetInvalidated();
-			}
-		}
-	}
 
 	public void setSource(List<OfflineSong> Songs) {
 		this.Song = Songs;
@@ -184,23 +247,32 @@ public class CustomSongListAdapter extends BaseAdapter implements Filterable {
 		return Song;
 	}
 	
-	public class SearchResultComparator implements Comparator<OfflineSong> {
-		String query;
-		Locale vietnam;
 
-		public SearchResultComparator(String query) {
-			vietnam = new Locale("vi_VN");
-			this.query = query.toLowerCase(vietnam);
-		}
-
-		@Override
-		public int compare(OfflineSong o1, OfflineSong o2) {
-			String title1, title2;
-			title1 = o1.getTitle().toLowerCase(vietnam);
-			title2 = o2.getTitle().toLowerCase(vietnam);
-			if (title1.indexOf(query) == title2.indexOf(query))
-				return (title1.length() < title2.length()) ? -1 : 1;
-			return (title1.indexOf(query) < title2.indexOf(query)) ? -1 : 1;
-		}
+	int getPlaylistId(String playlistName)
+	{
+		Cursor c = context.getContentResolver().query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+				new String[]
+				{ MediaStore.Audio.Playlists._ID },
+				MediaStore.Audio.Playlists.NAME + "=?", 
+				new String[]
+				{ playlistName }, 
+				MediaStore.Audio.Playlists.NAME);
+		int id = intFromCursor(c);
+		return id;
 	}
+	private static int intFromCursor(Cursor c)
+	{
+		int id = -1;
+		if (c != null)
+		{
+			c.moveToFirst();
+			if (!c.isAfterLast())
+			{
+				id = c.getInt(0);
+			}
+		}
+
+		c.close();
+		return id;
+	} 
 }

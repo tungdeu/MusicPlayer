@@ -12,6 +12,6 @@
     <string name="title_activity_play_song">PlaySong</string>
     <string name="title_activity_music_chart">Music Chart</string>
     <string name="title_activity_playlist_detail">Playlist Detail</string>
-    
-
+    <string name="title_activity_search_song">SearchSong</string>
+<string name="http">http://mp3.zing.vn/xml/load-song/</string>
 </resources>

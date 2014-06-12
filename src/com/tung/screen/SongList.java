@@ -2,6 +2,7 @@ package com.tung.screen;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -23,7 +24,7 @@ public class SongList extends SherlockFragmentActivity implements
 	private ViewPager mViewPager;
 	private TabsPagerAdapter mAdapter;
 	private ActionBar actionBar;
-	//SlidingMenu sMenu;
+	// SlidingMenu sMenu;
 	List<OfflineSong> Songs;
 
 	@Override
@@ -34,8 +35,7 @@ public class SongList extends SherlockFragmentActivity implements
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		//actionBar.get
-		
+		// actionBar.get
 
 		mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -56,23 +56,22 @@ public class SongList extends SherlockFragmentActivity implements
 		Tab3 = actionBar.newTab().setText("Albums");
 		Tab4 = actionBar.newTab().setText("Playlists");
 		Tab5 = actionBar.newTab().setText("Online Service");
-		Tab6 = actionBar.newTab().setText("Music Chart");
-		
+
 
 		Tab1.setTabListener(this);
 		Tab2.setTabListener(this);
 		Tab3.setTabListener(this);
 		Tab4.setTabListener(this);
 		Tab5.setTabListener(this);
-		Tab6.setTabListener(this);
+
 
 		actionBar.addTab(Tab1);
 		actionBar.addTab(Tab2);
 		actionBar.addTab(Tab3);
 		actionBar.addTab(Tab4);
 		actionBar.addTab(Tab5);
-		actionBar.addTab(Tab6);
-		
+
+
 		MediaPlayer mp = new MediaPlayer();
 		CreateList.getInstance().setMediaPlayer(mp);
 	}
@@ -82,13 +81,15 @@ public class SongList extends SherlockFragmentActivity implements
 		int itemId = item.getItemId();
 	    switch (itemId) {
 	    case android.R.id.home:
-//	        sMenu.toggle();
 
-	        // Toast.makeText(this, "home pressed", Toast.LENGTH_LONG).show();
 	        break;
+	        
+	    case R.id.menu_songlist_custom:
 
+	    	Intent intent = new Intent(SongList.this,PlaySong.class);
+	    	startActivity(intent);
+	    	break;
 	    }
-
 	    return true;
 	}
 

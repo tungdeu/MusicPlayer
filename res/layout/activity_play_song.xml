@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PlaySong" >
-    
+
     <ImageView
         android:id="@+id/play_song_imgView"
         android:layout_width="fill_parent"
@@ -16,13 +16,51 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_alignBottom="@+id/play_song_imgView" >
 
-<include
-    layout="@layout/media_control"
-    android:alpha="0.1" />
-</RelativeLayout>
-    
+        <include
+            layout="@layout/media_control"
+             />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" 
+        >
+        
+        <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/play_song_artist" 
+        android:background="#D1D1D1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:alpha="0.5"></RelativeLayout>
+
+        <TextView
+            android:id="@+id/play_song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="Test Title"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/play_song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/play_song_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="Test Artist name"
+            android:textColor="#FFFFFF" />
+    </RelativeLayout>
 
 </RelativeLayout>

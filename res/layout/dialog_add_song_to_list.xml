@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#EEEEEE"
+    android:paddingBottom="10dp" >
+
+    <TextView
+        android:id="@+id/dialog_add_song_to_list_txtCreatNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/dialog_add_song_to_list_lst"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:text="Creat New"
+        android:textSize="18sp" />
+
+    <ListView
+        android:id="@+id/dialog_add_song_to_list_lst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/dialog_add_song_to_list_txtCreatNew"
+        android:layout_centerHorizontal="true" >
+    </ListView>
+
+</RelativeLayout>

@@ -29,29 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ImageButton
-        android:id="@+id/navigation_previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:src="@android:drawable/ic_media_previous" />
-
-    <ImageButton
-        android:id="@+id/navigation_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/navigation_play"
-        android:src="@android:drawable/ic_media_next" />
-
-    <ImageButton
-        android:id="@+id/navigation_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/navigation_previous"
-        android:src="@android:drawable/ic_media_play" />
-
 </RelativeLayout>
 
 </RelativeLayout>

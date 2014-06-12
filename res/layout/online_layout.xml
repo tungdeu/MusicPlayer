@@ -5,62 +5,37 @@
 
     <ImageView
         android:id="@+id/online_img_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:src="@drawable/ic_launcher"
-        android:layout_marginTop="5dp" 
-        android:layout_marginLeft="5dp"/>
-
-    <ImageView
-        android:id="@+id/online_img_download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/online_img_search"
-        android:layout_marginTop="25dp"
-        android:src="@drawable/ic_launcher" 
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/search_icon" />
 
     <ImageView
         android:id="@+id/online_img_chart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/online_img_download"
+        android:layout_below="@+id/online_img_search"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="28dp"
-        android:src="@drawable/ic_launcher" 
-        android:layout_marginLeft="5dp"/>
+        android:src="@drawable/new_top10_icon" />
 
     <TextView
         android:id="@+id/online_txtSeach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/online_img_download"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/online_img_search"
-        android:text="Search"
-        android:textSize="18sp" 
-        android:gravity="center_vertical" 
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="5dp"/>
-
-    <TextView
-        android:id="@+id/online_txtDownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/online_img_download"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/online_img_download"
-        android:layout_toRightOf="@+id/online_img_download"
-        android:text="Download" 
-        android:textSize="18sp" 
+        android:layout_toRightOf="@+id/online_img_search"
         android:gravity="center_vertical"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:text="Search"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/online_txtChart"
@@ -69,11 +44,11 @@
         android:layout_alignBottom="@+id/online_img_chart"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/online_img_chart"
-        android:layout_toRightOf="@+id/online_img_chart"
-        android:text="Music Chart"
-        android:textSize="18sp"  
-        android:gravity="center_vertical"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/online_img_chart"
+        android:gravity="center_vertical"
+        android:text="Music Chart"
+        android:textSize="18sp" />
 
 </RelativeLayout>

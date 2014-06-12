@@ -104,6 +104,7 @@ public class ArtistDetail extends Activity {
 				intentPlay.putExtra("artist", artist);
 				intentPlay.putExtra("path", path);
 				startActivity(intentPlay);
+				CreateList.getInstance().playSong(audioID);
 
 			}
 

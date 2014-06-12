@@ -1,7 +1,5 @@
 package com.tung.musicplayer;
 
-import com.tung.screen.MusicChart;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +8,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.tung.screen.MusicChart;
+import com.tung.screen.SearchSong;
 
 public class MusicChartFragment extends Fragment {
 
@@ -23,10 +24,10 @@ private Intent intentChart;
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.online_layout, container, false);
 		txtSearch = (TextView)view.findViewById(R.id.online_txtSeach);
-		txtDownload = (TextView)view.findViewById(R.id.online_txtDownload);
+		//txtDownload = (TextView)view.findViewById(R.id.online_txtDownload);
 		txtChart = (TextView)view.findViewById(R.id.online_txtChart);
 		
-//		intentSearch = new Intent(getActivity(), OnlineSearch.class);
+		intentSearch = new Intent(getActivity(), SearchSong.class);
 //		intentDownload = new Intent(getActivity(), Download.class);
 		
 		txtSearch.setOnClickListener(new OnClickListener() {
@@ -34,18 +35,18 @@ private Intent intentChart;
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//startActivity(intentSearch);
+				startActivity(intentSearch);
 			}
 		});
 		
-		txtDownload.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				//startActivity(intentDownload);
-			}
-		});
+//		txtDownload.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				//startActivity(intentDownload);
+//			}
+//		});
 		
 		txtChart.setOnClickListener(new OnClickListener() {
 			
